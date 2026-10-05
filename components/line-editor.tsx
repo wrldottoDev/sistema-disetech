@@ -2,11 +2,11 @@
 
 import { useActionState, useMemo, useState } from "react";
 import type { ActionState } from "@/app/actions/users";
-import { type Currency, formatMoney, lineAmounts, parseDecimal, round, unitPrice } from "@/lib/money";
+import { type Currency, formatMoney, lineAmounts, marginPercentFromAmount, parseDecimal, round, unitPrice } from "@/lib/money";
 
 type Option = { id: string; name: string; unit?: string | null };
 type CostOption = { id: string; providerId: string; catalogItemId: string | null; itemName: string; unitCost: string; currency: Currency; quotedOn: string };
-export type LineDefaults = { id?: string; itemName?: string; itemDescription?: string | null; unit?: string | null; catalogItemId?: string | null; providerId?: string | null; quantity?: string; unitCost?: string; costCurrency?: Currency; marginPercent?: string };
+export type LineDefaults = { id?: string; itemName?: string; itemDescription?: string | null; unit?: string | null; catalogItemId?: string | null; providerId?: string | null; quantity?: string; unitCost?: string; costCurrency?: Currency; marginPercent?: string; marginMode?: "PERCENT" | "AMOUNT"; marginAmount?: string | null };
 
 type Props = {
   action: (state: ActionState, form: FormData) => Promise<ActionState>;
@@ -36,21 +36,24 @@ export function LineEditor({ action, quotationId, revisionId, revisionVersion, c
   const [cost, setCost] = useState(trim(defaults?.unitCost));
   const [costCurrency, setCostCurrency] = useState<Currency>(defaults?.costCurrency ?? currency);
   const [margin, setMargin] = useState(trim(defaults?.marginPercent) || "25");
+  const [marginMode, setMarginMode] = useState<"PERCENT" | "AMOUNT">(defaults?.marginMode ?? "PERCENT");
+  const [marginAmount, setMarginAmount] = useState(trim(defaults?.marginAmount));
 
   // Tras agregar una línea nueva se limpia el formulario para capturar la siguiente.
   const [state, formAction, pending] = useActionState(async (prev: ActionState, form: FormData) => {
     const result = await action(prev, form);
-    if (result.ok && isNew) { setName(""); setDetail(""); setUnit(""); setCatalogId(""); setProviderId(""); setQty("1"); setCost(""); }
+    if (result.ok && isNew) { setName(""); setDetail(""); setUnit(""); setCatalogId(""); setProviderId(""); setQty("1"); setCost(""); setMarginAmount(""); }
     return result;
   }, { ok: false, message: "" });
 
   const preview = useMemo(() => {
     try {
       const c = parseDecimal(cost);
-      const m = parseDecimal(margin);
+      const amount = marginMode === "AMOUNT" ? parseDecimal(marginAmount) : null;
+      const m = amount !== null ? (c > 0n && amount > 0n ? marginPercentFromAmount(c, amount) : 0n) : parseDecimal(margin);
       const q = parseDecimal(qty);
       if (c <= 0n || m <= 0n || q <= 0n) return null;
-      const price = unitPrice({ cost: c, costCurrency, marginPercent: m, currency, fxRate: parseDecimal(fxRate) });
+      const price = unitPrice({ cost: c, costCurrency, marginPercent: m, marginAmount: amount, currency, fxRate: parseDecimal(fxRate) });
       const a = lineAmounts(q, price, 13_000_000n);
       // Misma política que el PDF: cada importe se redondea a centavos y el total es la suma de los redondeados.
       const subtotal = round(a.subtotal);
@@ -59,7 +62,7 @@ export function LineEditor({ action, quotationId, revisionId, revisionVersion, c
     } catch {
       return null;
     }
-  }, [cost, margin, qty, costCurrency, currency, fxRate, warningPercent]);
+  }, [cost, margin, marginMode, marginAmount, qty, costCurrency, currency, fxRate, warningPercent]);
 
   const relevantCosts = costs.filter((c) => (catalogId ? c.catalogItemId === catalogId : true)).slice(0, 25);
   const symbol = currency === "USD" ? "$" : "₡";
@@ -102,7 +105,17 @@ export function LineEditor({ action, quotationId, revisionId, revisionVersion, c
         <div className="row">
           <label>Costo unitario<input name="unitCost" value={cost} onChange={(e) => setCost(e.target.value)} inputMode="decimal" required /></label>
           <label>Moneda del costo<select name="costCurrency" value={costCurrency} onChange={(e) => setCostCurrency(e.target.value as Currency)}><option value="CRC">CRC</option><option value="USD">USD</option></select></label>
-          <label>Utilidad %<input name="marginPercent" value={margin} onChange={(e) => setMargin(e.target.value)} inputMode="decimal" required /></label>
+        </div>
+        <div className="row">
+          <label>Utilidad por
+            <select name="marginMode" value={marginMode} onChange={(e) => setMarginMode(e.target.value as "PERCENT" | "AMOUNT")}>
+              <option value="PERCENT">Porcentaje (%)</option>
+              <option value="AMOUNT">Monto fijo por unidad</option>
+            </select>
+          </label>
+          {marginMode === "PERCENT"
+            ? <label>Utilidad %<input name="marginPercent" value={margin} onChange={(e) => setMargin(e.target.value)} inputMode="decimal" required /></label>
+            : <label>Monto de utilidad por unidad <span className="field-hint">en {costCurrency === "USD" ? "$" : "₡"} (moneda del costo)</span><input name="marginAmount" value={marginAmount} onChange={(e) => setMarginAmount(e.target.value)} inputMode="decimal" required /></label>}
         </div>
         {providerId && <label className="check"><input type="checkbox" name="saveCost" defaultChecked /> Guardar este costo en el historial</label>}
         {preview?.low && <p className="warn" role="status">Utilidad menor a {trim(warningPercent)}%: un gerente deberá aprobar la cotización antes de emitirla.</p>}

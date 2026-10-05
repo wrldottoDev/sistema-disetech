@@ -50,6 +50,13 @@
       "when": 1790989682904,
       "tag": "0006_business_modules",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1791237573128,
+      "tag": "0007_smiling_storm",
+      "breakpoints": true
     }
   ]
 }

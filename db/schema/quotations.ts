@@ -169,6 +169,8 @@ export const quotationRevisions = pgTable(
     fxSource: exchangeRateSource("fx_source"), // A2 Q4 — text -> enum
     fxAppliedRate: numeric("fx_applied_rate", { precision: 14, scale: 6 }), // A2 Q4
     concept: text("concept"),
+    // BY_UNIT: el cliente ve cada línea con su precio. PACKAGE: el cliente ve una sola línea con el total.
+    pricingMode: text("pricing_mode").notNull().default("BY_UNIT"),
     validUntil: date("valid_until", { mode: "string" }),
     notes: text("notes"),
     // Cuentas de pago vigentes al emitir (congeladas con la revisión; el PDF/preview de una emitida no cambia).
@@ -297,6 +299,7 @@ export const quotationRevisions = pgTable(
         AND (${t.taxTotal} IS NULL OR (${t.taxTotal} >= 0 AND ${t.taxTotal} NOT IN ('NaN','Infinity','-Infinity')))
         AND (${t.total} IS NULL OR (${t.total} >= 0 AND ${t.total} NOT IN ('NaN','Infinity','-Infinity')))`,
     ),
+    check("ck_quotation_revisions_pricing_mode", sql`${t.pricingMode} IN ('BY_UNIT','PACKAGE')`),
     check("ck_quotation_revisions_total_equals_sum", sql`${t.total} = ${t.subtotal} + ${t.taxTotal}`),
   ],
 );
@@ -322,6 +325,9 @@ export const quotationItems = pgTable(
     unitCost: numeric("unit_cost", { precision: 20, scale: 6 }).notNull(),
     costCurrency: currencyCode("cost_currency").notNull(),
     marginPercent: numeric("margin_percent", { precision: 9, scale: 6 }).notNull(),
+    // PERCENT: el vendedor fijó el %. AMOUNT: fijó un monto por unidad (en la moneda del costo); margin_percent queda derivado.
+    marginMode: text("margin_mode").notNull().default("PERCENT"),
+    marginAmount: numeric("margin_amount", { precision: 20, scale: 6 }),
     unitPrice: numeric("unit_price", { precision: 20, scale: 6 }).notNull(),
     // A3 DB-06/17 — subtotal = quantity * unit_price, exact (no rounding) at these scales.
     subtotal: numeric("subtotal").notNull().generatedAlwaysAs(sql`quantity * unit_price`),
@@ -377,6 +383,7 @@ export const quotationItems = pgTable(
       "ck_quotation_items_margin_range",
       sql`${t.marginPercent} > 0 AND ${t.marginPercent} <= 100 AND ${t.marginPercent} <> 'NaN'`,
     ),
+    check("ck_quotation_items_margin_mode", sql`(${t.marginMode} = 'PERCENT' AND ${t.marginAmount} IS NULL) OR (${t.marginMode} = 'AMOUNT' AND ${t.marginAmount} > 0)`),
     check("ck_quotation_items_unit_price_non_negative", sql`${t.unitPrice} >= 0 AND ${t.unitPrice} <> 'NaN'`),
     // A2 Q5 — V1 legal rule; a future rate change is a deliberate migration, historical rows
     // keep their snapshot. system_settings.default_vat_percent removed (Q5) — this is the

@@ -53,9 +53,10 @@ export const div = (a: bigint, b: bigint): bigint => divRound(a * UNIT, b);
  * con el tipo de cambio de venta (USD→CRC multiplica, CRC→USD divide). Se redondea UNA sola vez, a centavos,
  * conservando toda la precisión de la utilidad y del tipo de cambio en los pasos intermedios.
  */
-export function unitPrice(input: { cost: bigint; costCurrency: Currency; marginPercent: bigint; currency: Currency; fxRate: bigint }): bigint {
+export function unitPrice(input: { cost: bigint; costCurrency: Currency; marginPercent: bigint; currency: Currency; fxRate: bigint; marginAmount?: bigint | null }): bigint {
   const base = 100n * UNIT;
-  const grossed = input.cost * (base + input.marginPercent); // escala 6 + 8
+  // Con monto fijo (en la moneda del costo) el precio es costo + monto; el porcentaje queda sólo como dato derivado.
+  const grossed = input.marginAmount != null ? (input.cost + input.marginAmount) * base : input.cost * (base + input.marginPercent); // escala 6 + 8
   // numerador/denominador exactos del precio (escala 6); se redondea una sola vez, directo a centavos.
   let numerator = grossed;
   let denominator = base;
@@ -65,6 +66,11 @@ export function unitPrice(input: { cost: bigint; costCurrency: Currency; marginP
   }
   const CENT = 10n ** BigInt(SCALE - 2);
   return divRound(numerator, denominator * CENT) * CENT;
+}
+
+/** Utilidad % equivalente a un monto fijo por unidad (escala 6, redondeado). */
+export function marginPercentFromAmount(cost: bigint, amount: bigint): bigint {
+  return divRound(amount * 100n * UNIT, cost);
 }
 
 export type LineAmounts = { subtotal: bigint; tax: bigint; total: bigint };

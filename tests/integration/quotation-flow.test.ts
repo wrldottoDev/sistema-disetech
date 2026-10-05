@@ -56,6 +56,26 @@ describe("cálculos", () => {
     await updateHeader(seller, id, (await rev(id)).version, headerInput({ currency: "USD" }));
     expect((await getQuotationDetail(seller, id)).items[0].unitPrice).toBe("2.000000");
   });
+  it("utilidad por monto fijo: precio = costo + monto y sobrevive al cambio de moneda", async () => {
+    const id = await draft();
+    await addItem(seller, id, (await rev(id)).version, itemInput({ quantity: "2", unitCost: "10000", marginMode: "AMOUNT", marginAmount: "3500" }));
+    const [item] = (await getQuotationDetail(seller, id)).items;
+    expect(item).toMatchObject({ unitPrice: "13500.000000", marginMode: "AMOUNT", marginAmount: "3500.000000" });
+    await updateHeader(seller, id, (await rev(id)).version, headerInput({ currency: "USD" }));
+    expect((await getQuotationDetail(seller, id)).items[0].unitPrice).toBe("29.200000");
+    await expect(addItem(seller, id, (await rev(id)).version, itemInput({ unitCost: "100", marginMode: "AMOUNT", marginAmount: "101" }))).rejects.toBeDefined();
+  });
+  it("paquete: el cliente ve una sola línea con el total y sin precios por producto", async () => {
+    const id = await draft({ pricingMode: "PACKAGE" });
+    await addItem(seller, id, (await rev(id)).version, itemInput({ itemName: "Cámara", quantity: "2", unitCost: "10000", marginPercent: "30" }));
+    await addItem(seller, id, (await rev(id)).version, itemInput({ itemName: "DVR", quantity: "1", unitCost: "20000", marginPercent: "50" }));
+    const { document } = await buildClientDocument(seller, id);
+    expect(document.lines).toHaveLength(1);
+    expect(document.lines[0]).toMatchObject({ unitPrice: "—", taxPercent: "13.0%", total: "63,280.00" });
+    expect(document.lines[0].description).toMatch(/Cámara.*DVR/);
+    expect(document.totals).toMatchObject({ subtotal: "56,000.00", tax: "7,280.00", total: "63,280.00" });
+    expect(JSON.stringify(document)).not.toMatch(/13,000|30,000/);
+  });
   it("el documento del cliente no contiene costo, utilidad ni proveedor", async () => {
     const id = await draft();
     await addItem(seller, id, (await rev(id)).version, itemInput({ unitCost: "7777", marginPercent: "41.5" }));

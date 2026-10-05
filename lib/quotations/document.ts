@@ -21,7 +21,7 @@ export async function buildClientDocument(principal: Principal, quotationId: unk
   const taxRate = 13n * 1_000_000n;
   let subtotal = 0n;
   let tax = 0n;
-  const lines = items.map((item) => {
+  const itemLines = items.map((item) => {
     const amounts = lineAmounts(fromDb(item.quantity), fromDb(item.unitPrice), fromDb(item.taxPercent));
     // El documento impreso suma los importes ya redondeados de cada línea para que cuadre a simple vista.
     const lineSubtotal = round(amounts.subtotal);
@@ -40,6 +40,18 @@ export async function buildClientDocument(principal: Principal, quotationId: unk
     };
   });
   const total = subtotal + tax;
+  // Paquete: el cliente ve una sola línea con el total; los productos se listan sin precios.
+  const lines = revision.pricingMode === "PACKAGE"
+    ? [{
+        name: `Paquete: ${revision.concept ?? ""}`.trim(),
+        description: items.map((i) => `${formatMoney(fromDb(i.quantity))} ${i.unit ?? ""} ${i.itemName}`.replace(/\s+/g, " ")).join("; "),
+        quantity: "1.00",
+        unitPrice: "—",
+        subtotal: "—",
+        taxPercent: `${Number(items[0]?.taxPercent ?? 13).toFixed(1)}%`,
+        total: formatMoney(total),
+      }]
+    : itemLines;
   const currency = revision.currency as Currency;
   const rate = fromDb((revision.fxAppliedRate ?? "1") as string);
   const issueDate = revision.issuedAt ? new Intl.DateTimeFormat("en-CA", { timeZone: "America/Costa_Rica" }).format(revision.issuedAt) : todayCR();

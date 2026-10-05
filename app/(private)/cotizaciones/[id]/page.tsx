@@ -64,6 +64,7 @@ export default async function QuotationPage({ params, searchParams }: PageProps<
               <label>Moneda<select name="currency" defaultValue={revision.currency}><option value="CRC">Colones (CRC)</option><option value="USD">Dólares (USD)</option></select></label>
               <label>Válida hasta<input name="validUntil" type="date" min={todayCR()} defaultValue={revision.validUntil ?? ""} required /></label>
             </div>
+            <label>Tipo de cotización<select name="pricingMode" defaultValue={revision.pricingMode}><option value="BY_UNIT">Por unidad (precios desglosados)</option><option value="PACKAGE">Por paquete (el cliente ve solo el total)</option></select></label>
             {contacts.length > 0 && <label>Contacto<select name="contactId" defaultValue={contacts.find((c) => c.fullName === revision.customerContactName)?.id ?? contacts[0].id}>{contacts.map((c) => <option key={c.id} value={c.id}>{c.fullName}</option>)}</select></label>}
             <label>Código CABYS <span className="field-hint">opcional</span><input name="cabys" defaultValue={revision.customerCabys ?? ""} inputMode="numeric" maxLength={13} /></label>
             <label>Notas y condiciones <span className="field-hint">aparecen en el PDF</span><textarea name="notes" defaultValue={revision.notes ?? ""} maxLength={4000} /></label>
@@ -72,7 +73,7 @@ export default async function QuotationPage({ params, searchParams }: PageProps<
         ) : (
           <dl className="doc-kv">
             <dt>Concepto</dt><dd>{revision.concept ?? "—"}</dd><dt>Vendedor</dt><dd>{revision.sellerName}</dd><dt>Contacto</dt><dd>{revision.customerContactName ?? "—"} {revision.customerContactPhone ?? ""}</dd>
-            <dt>Moneda</dt><dd>{revision.currency}</dd><dt>Tipo de cambio usado</dt><dd>{rateText}</dd><dt>Válida hasta</dt><dd>{dmy(revision.validUntil)}</dd><dt>Notas</dt><dd>{revision.notes ?? "—"}</dd>
+            <dt>Tipo</dt><dd>{revision.pricingMode === "PACKAGE" ? "Por paquete (solo total)" : "Por unidad"}</dd><dt>Moneda</dt><dd>{revision.currency}</dd><dt>Tipo de cambio usado</dt><dd>{rateText}</dd><dt>Válida hasta</dt><dd>{dmy(revision.validUntil)}</dd><dt>Notas</dt><dd>{revision.notes ?? "—"}</dd>
           </dl>
         )}
         {editable && <p className="field-hint">Tipo de cambio usado: <strong>{rateText}</strong>. Cambiar la moneda recalcula los precios.</p>}
@@ -88,12 +89,12 @@ export default async function QuotationPage({ params, searchParams }: PageProps<
               <strong>{item.lineNumber}. {item.itemName}</strong>
               {item.itemDescription && <small>{item.itemDescription}</small>}
               <span>{formatMoney(fromDb(item.quantity))} {item.unit ?? ""} × {fmt(fromDb(item.unitPrice))} = {fmt(round(a.subtotal))} + IVA {fmt(round(a.tax))} → <strong>{fmt(round(a.subtotal) + round(a.tax))}</strong></span>
-              <div className="internal">Interno: proveedor {item.providerNameSnapshot ?? "—"} · costo {item.costCurrency === "USD" ? "$" : "₡"}{formatMoney(fromDb(item.unitCost))} · utilidad {Number(item.marginPercent)}%{fromDb(item.marginPercent) < fromDb(marginWarning) ? " ⚠" : ""}</div>
+              <div className="internal">Interno: proveedor {item.providerNameSnapshot ?? "—"} · costo {item.costCurrency === "USD" ? "$" : "₡"}{formatMoney(fromDb(item.unitCost))} · utilidad {item.marginMode === "AMOUNT" ? `${item.costCurrency === "USD" ? "$" : "₡"}${formatMoney(fromDb(item.marginAmount ?? "0"))} por unidad (${Number(item.marginPercent).toFixed(2)}%)` : `${Number(item.marginPercent)}%`}{fromDb(item.marginPercent) < fromDb(marginWarning) ? " ⚠" : ""}</div>
               {editable && options && (
                 <details>
                   <summary>Editar o eliminar</summary>
                   <div className="stack">
-                    <LineEditor action={updateItemAction} quotationId={quotation.id} revisionId={revision.id} revisionVersion={revision.version} currency={currency} fxRate={revision.fxAppliedRate ?? "1"} warningPercent={marginWarning} catalog={options.items} providers={options.providers} costs={options.costs.map((c) => ({ ...c, currency: asCurrency(c.currency) }))} submitLabel="Guardar línea" defaults={{ id: item.id, itemName: item.itemName, itemDescription: item.itemDescription, unit: item.unit, catalogItemId: item.catalogItemId, providerId: item.providerId, quantity: item.quantity, unitCost: item.unitCost, costCurrency: asCurrency(item.costCurrency), marginPercent: item.marginPercent }} />
+                    <LineEditor action={updateItemAction} quotationId={quotation.id} revisionId={revision.id} revisionVersion={revision.version} currency={currency} fxRate={revision.fxAppliedRate ?? "1"} warningPercent={marginWarning} catalog={options.items} providers={options.providers} costs={options.costs.map((c) => ({ ...c, currency: asCurrency(c.currency) }))} submitLabel="Guardar línea" defaults={{ id: item.id, itemName: item.itemName, itemDescription: item.itemDescription, unit: item.unit, catalogItemId: item.catalogItemId, providerId: item.providerId, quantity: item.quantity, unitCost: item.unitCost, costCurrency: asCurrency(item.costCurrency), marginPercent: item.marginPercent, marginMode: item.marginMode === "AMOUNT" ? "AMOUNT" : "PERCENT", marginAmount: item.marginAmount }} />
                     <ActionForm action={removeItemAction} submitLabel="Eliminar línea" variant="danger" confirm="¿Eliminar esta línea?">
                       <input type="hidden" name="quotationId" value={quotation.id} /><input type="hidden" name="revisionId" value={revision.id} /><input type="hidden" name="revisionVersion" value={revision.version} /><input type="hidden" name="itemId" value={item.id} />
                     </ActionForm>

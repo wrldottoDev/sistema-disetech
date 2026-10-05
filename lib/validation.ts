@@ -68,6 +68,7 @@ export const quotationHeaderSchema = z.object({
   validUntil: dateOnly,
   notes: optionalText(4000),
   cabys: z.preprocess(blank, z.string().trim().regex(/^[0-9]{13}$/, "El código CABYS debe tener 13 dígitos.").optional()),
+  pricingMode: z.preprocess(blank, z.enum(["BY_UNIT", "PACKAGE"]).optional()),
 });
 
 export const quotationItemSchema = z.object({
@@ -79,7 +80,9 @@ export const quotationItemSchema = z.object({
   quantity: z.string().trim().min(1, "La cantidad es obligatoria."),
   unitCost: z.string().trim().min(1, "El costo es obligatorio."),
   costCurrency: currencySchema,
-  marginPercent: z.string().trim().min(1, "La utilidad es obligatoria."),
+  marginMode: z.preprocess(blank, z.enum(["PERCENT", "AMOUNT"]).default("PERCENT")),
+  marginPercent: z.preprocess(blank, z.string().trim().optional()),
+  marginAmount: z.preprocess(blank, z.string().trim().optional()),
   saveCost: z.preprocess((v) => v === "on" || v === "true" || v === true, z.boolean()),
 });
 

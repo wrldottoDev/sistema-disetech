@@ -19,7 +19,7 @@ import {
 import { writeAudit } from "@/lib/audit";
 import { type Principal, requirePermission } from "@/lib/rbac";
 import { AppError } from "@/lib/errors";
-import { type Currency, fromDb, parseDecimal, toDb, unitPrice } from "@/lib/money";
+import { type Currency, fromDb, marginPercentFromAmount, parseDecimal, toDb, unitPrice } from "@/lib/money";
 import { ownedBy, quotationScope } from "@/lib/scope";
 import { closeSchema, quotationHeaderSchema, quotationItemSchema, reviewSchema, uuidSchema, versionSchema } from "@/lib/validation";
 
@@ -203,6 +203,7 @@ export async function createQuotation(principal: Principal, customerIdInput: unk
       fxSource: fx.source,
       fxAppliedRate: fx.sell_rate,
       concept: header.concept,
+      pricingMode: header.pricingMode ?? "BY_UNIT",
       validUntil: header.validUntil,
       notes: header.notes ?? null,
       customerCabys: header.cabys ?? customer.economicActivityCabys,
@@ -247,7 +248,7 @@ function customerSnapshot(customer: typeof customers.$inferSelect, contact: type
 async function repriceItems(tx: Tx, revision: { id: string }, currency: Currency, fxRate: bigint): Promise<void> {
   const items = await tx.select().from(quotationItems).where(eq(quotationItems.revisionId, revision.id));
   for (const item of items) {
-    const price = unitPrice({ cost: fromDb(item.unitCost), costCurrency: item.costCurrency, marginPercent: fromDb(item.marginPercent), currency, fxRate });
+    const price = unitPrice({ cost: fromDb(item.unitCost), costCurrency: item.costCurrency, marginPercent: fromDb(item.marginPercent), marginAmount: item.marginAmount === null ? null : fromDb(item.marginAmount), currency, fxRate });
     if (price <= 0n) throw new AppError("VALIDATION", `La línea ${item.lineNumber} quedaría con precio cero en esta moneda; ajusta su costo o utilidad primero.`);
     await tx.update(quotationItems).set({ unitPrice: toDb(price) }).where(eq(quotationItems.id, item.id));
   }
@@ -268,6 +269,7 @@ export async function updateHeader(principal: Principal, quotationId: unknown, r
       .set({
         currency: header.currency,
         concept: header.concept,
+        ...(header.pricingMode ? { pricingMode: header.pricingMode } : {}),
         validUntil: header.validUntil,
         notes: header.notes ?? null,
         customerCabys: header.cabys ?? null,
@@ -287,11 +289,21 @@ function parseItem(input: unknown, revision: RevisionRow) {
   if (quantity <= 0n || quantity % 10_000n !== 0n) throw new AppError("VALIDATION", "La cantidad debe ser mayor que cero y tener hasta 2 decimales.");
   const cost = parseDecimal(v.unitCost, "El costo");
   if (cost <= 0n) throw new AppError("VALIDATION", "El costo debe ser mayor que cero.");
-  const margin = parseDecimal(v.marginPercent, "La utilidad");
-  if (margin <= 0n || margin > 100n * 1_000_000n) throw new AppError("VALIDATION", "La utilidad debe ser mayor que 0 y no superar 100%.");
-  const price = unitPrice({ cost, costCurrency: v.costCurrency, marginPercent: margin, currency: revision.currency, fxRate: fromDb(revision.fxAppliedRate as string) });
+  let margin: bigint;
+  let marginAmount: bigint | null = null;
+  if (v.marginMode === "AMOUNT") {
+    marginAmount = parseDecimal(v.marginAmount ?? "", "El monto de utilidad");
+    if (marginAmount <= 0n) throw new AppError("VALIDATION", "El monto de utilidad debe ser mayor que cero.");
+    // El % derivado alimenta la alerta de utilidad baja y el rango permitido (hasta 100% del costo).
+    margin = marginPercentFromAmount(cost, marginAmount);
+    if (margin <= 0n) throw new AppError("VALIDATION", "El monto de utilidad es demasiado pequeño para el costo indicado.");
+  } else {
+    margin = parseDecimal(v.marginPercent ?? "", "La utilidad");
+  }
+  if (margin <= 0n || margin > 100n * 1_000_000n) throw new AppError("VALIDATION", "La utilidad debe ser mayor que 0 y no superar 100% del costo.");
+  const price = unitPrice({ cost, costCurrency: v.costCurrency, marginPercent: margin, marginAmount, currency: revision.currency, fxRate: fromDb(revision.fxAppliedRate as string) });
   if (price <= 0n) throw new AppError("VALIDATION", "El precio calculado es cero; revisa costo y utilidad.");
-  return { v, quantity, cost, margin, price };
+  return { v, quantity, cost, margin, marginAmount, price };
 }
 
 async function itemRelations(tx: Tx, v: ReturnType<typeof parseItem>["v"]) {
@@ -320,7 +332,7 @@ export async function addItem(principal: Principal, quotationId: unknown, revisi
   await db.transaction(async (tx) => {
     const { quotation, revision } = await loadDraft(tx, principal, quotationId, revisionId);
     await claim(tx, revision, expected);
-    const { v, quantity, cost, margin, price } = parseItem(input, revision);
+    const { v, quantity, cost, margin, marginAmount, price } = parseItem(input, revision);
     const rel = await itemRelations(tx, v);
     const [{ next }] = await tx.select({ next: sql<number>`coalesce(max(${quotationItems.lineNumber}), 0) + 1` }).from(quotationItems).where(eq(quotationItems.revisionId, revision.id));
     await tx.insert(quotationItems).values({
@@ -337,6 +349,8 @@ export async function addItem(principal: Principal, quotationId: unknown, revisi
       unitCost: toDb(cost),
       costCurrency: v.costCurrency,
       marginPercent: toDb(margin),
+      marginMode: v.marginMode,
+      marginAmount: marginAmount === null ? null : toDb(marginAmount),
       unitPrice: toDb(price),
     });
     if (v.saveCost && rel.provider) {
@@ -352,7 +366,7 @@ export async function updateItem(principal: Principal, quotationId: unknown, rev
   await db.transaction(async (tx) => {
     const { quotation, revision } = await loadDraft(tx, principal, quotationId, revisionId);
     await claim(tx, revision, expected);
-    const { v, quantity, cost, margin, price } = parseItem(input, revision);
+    const { v, quantity, cost, margin, marginAmount, price } = parseItem(input, revision);
     const rel = await itemRelations(tx, v);
     const updated = await tx
       .update(quotationItems)
@@ -367,6 +381,8 @@ export async function updateItem(principal: Principal, quotationId: unknown, rev
         unitCost: toDb(cost),
         costCurrency: v.costCurrency,
         marginPercent: toDb(margin),
+        marginMode: v.marginMode,
+        marginAmount: marginAmount === null ? null : toDb(marginAmount),
         unitPrice: toDb(price),
       })
       .where(and(eq(quotationItems.id, itemId), eq(quotationItems.revisionId, revision.id)))
@@ -522,6 +538,7 @@ export async function createRevision(principal: Principal, quotationId: unknown,
         fxSource: fx.source,
         fxAppliedRate: fx.sell_rate,
         concept: previous.concept,
+        pricingMode: previous.pricingMode,
         validUntil: previous.validUntil && previous.validUntil >= todayCR() ? previous.validUntil : null,
         notes: previous.notes,
         customerCabys: previous.customerCabys,
@@ -536,7 +553,7 @@ export async function createRevision(principal: Principal, quotationId: unknown,
     await tx.execute(sql`SELECT claim_quotation_revision(${created.id}::uuid, ${created.version}::int)`);
     const items = await tx.select().from(quotationItems).where(eq(quotationItems.revisionId, previous.id)).orderBy(quotationItems.lineNumber);
     for (const item of items) {
-      const price = unitPrice({ cost: fromDb(item.unitCost), costCurrency: item.costCurrency, marginPercent: fromDb(item.marginPercent), currency: created.currency, fxRate: fromDb(fx.sell_rate) });
+      const price = unitPrice({ cost: fromDb(item.unitCost), costCurrency: item.costCurrency, marginPercent: fromDb(item.marginPercent), marginAmount: item.marginAmount === null ? null : fromDb(item.marginAmount), currency: created.currency, fxRate: fromDb(fx.sell_rate) });
       if (price <= 0n) throw new AppError("VALIDATION", `La línea ${item.lineNumber} quedaría con precio cero con el tipo de cambio vigente.`);
       await tx.insert(quotationItems).values({
         quotationId: quotation.id,
@@ -552,6 +569,8 @@ export async function createRevision(principal: Principal, quotationId: unknown,
         unitCost: item.unitCost,
         costCurrency: item.costCurrency,
         marginPercent: item.marginPercent,
+        marginMode: item.marginMode,
+        marginAmount: item.marginAmount,
         unitPrice: toDb(price),
       });
     }

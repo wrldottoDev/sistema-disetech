@@ -37,6 +37,7 @@ export default async function NewQuotationPage({ searchParams }: PageProps<"/cot
           <input type="hidden" name="customerId" value={customer.id} />
           <label>Concepto<input name="concept" required minLength={2} maxLength={300} placeholder="Ej. Venta de material eléctrico" /></label>
           <label>Moneda<select name="currency" defaultValue="CRC"><option value="CRC">Colones (CRC)</option><option value="USD">Dólares (USD)</option></select></label>
+          <label>Tipo de cotización<select name="pricingMode" defaultValue="BY_UNIT"><option value="BY_UNIT">Por unidad (precios desglosados)</option><option value="PACKAGE">Por paquete (el cliente ve solo el total)</option></select></label>
           <label>Válida hasta<input name="validUntil" type="date" min={todayCR()} defaultValue={validUntil} required /></label>
           {contacts.length > 0 && <label>Contacto<select name="contactId" defaultValue={contacts[0].id}>{contacts.map((c) => <option key={c.id} value={c.id}>{c.fullName}</option>)}</select></label>}
           <label>Notas y condiciones <span className="field-hint">aparecen en el PDF</span><textarea name="notes" maxLength={4000} /></label>

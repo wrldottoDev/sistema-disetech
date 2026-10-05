@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { convert, formatMoney, fromDb, lineAmounts, parseDecimal, round, toDb, unitPrice } from "@/lib/money";
+import { convert, formatMoney, fromDb, lineAmounts, marginPercentFromAmount, parseDecimal, round, toDb, unitPrice } from "@/lib/money";
 
 const d = (v: string) => parseDecimal(v);
 
@@ -19,6 +19,13 @@ describe("money", () => {
     expect(formatMoney(price)).toBe("18,337.50");
     const { subtotal, tax, total } = lineAmounts(d("1"), d("18337.58"), d("13"));
     expect([formatMoney(subtotal), formatMoney(tax), formatMoney(total)]).toEqual(["18,337.58", "2,383.89", "20,721.47"]);
+  });
+  it("utilidad por monto fijo: precio = costo + monto, y el % derivado es consistente", () => {
+    const price = unitPrice({ cost: d("10000"), costCurrency: "CRC", marginPercent: 0n, marginAmount: d("3500"), currency: "CRC", fxRate: d("462.29") });
+    expect(formatMoney(price)).toBe("13,500.00");
+    expect(formatMoney(marginPercentFromAmount(d("10000"), d("3500")))).toBe("35.00");
+    const usd = unitPrice({ cost: d("10"), costCurrency: "USD", marginPercent: 0n, marginAmount: d("2"), currency: "CRC", fxRate: d("462.29") });
+    expect(formatMoney(usd)).toBe("5,547.48");
   });
   it("convierte monedas con tipo de cambio de venta", () => {
     const usd = unitPrice({ cost: d("10"), costCurrency: "USD", marginPercent: d("20"), currency: "CRC", fxRate: d("462.29") });
