@@ -1,0 +1,3 @@
+import { ActionForm } from "@/components/action-form";
+import { bootstrapAction } from "@/app/actions/users";
+export default function BootstrapPage() { return <><h1>Primer administrador</h1><p>Este formulario se bloquea permanentemente después de crear el primer Admin.</p><ActionForm action={bootstrapAction} submitLabel="Crear primer Admin"><label>Código de inicialización <span className="field-hint">BOOTSTRAP_TOKEN del servidor (si está configurado)</span><input name="token" type="password" autoComplete="off" /></label><label>Nombre completo<input name="name" required /></label><label>Correo corporativo<input name="email" type="email" required /></label><label>Teléfono de trabajo<input name="phone" inputMode="tel" required /></label></ActionForm></>; }

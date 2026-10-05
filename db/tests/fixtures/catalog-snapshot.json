@@ -1,0 +1,2139 @@
+{
+  "triggers": [
+    {
+      "table": "audit_logs",
+      "name": "trg_audit_logs_no_delete",
+      "def": "CREATE TRIGGER trg_audit_logs_no_delete BEFORE DELETE ON public.audit_logs FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "audit_logs",
+      "name": "trg_audit_logs_no_truncate",
+      "def": "CREATE TRIGGER trg_audit_logs_no_truncate BEFORE TRUNCATE ON public.audit_logs FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "audit_logs",
+      "name": "trg_audit_logs_no_update",
+      "def": "CREATE TRIGGER trg_audit_logs_no_update BEFORE UPDATE ON public.audit_logs FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "catalog_items",
+      "name": "trg_catalog_items_check_merge",
+      "def": "CREATE TRIGGER trg_catalog_items_check_merge BEFORE INSERT OR UPDATE ON public.catalog_items FOR EACH ROW EXECUTE FUNCTION fn_check_merge()",
+      "enabled": "O"
+    },
+    {
+      "table": "catalog_items",
+      "name": "trg_catalog_items_no_delete",
+      "def": "CREATE TRIGGER trg_catalog_items_no_delete BEFORE DELETE ON public.catalog_items FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "catalog_items",
+      "name": "trg_catalog_items_no_truncate",
+      "def": "CREATE TRIGGER trg_catalog_items_no_truncate BEFORE TRUNCATE ON public.catalog_items FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "catalog_items",
+      "name": "trg_catalog_items_touch_version",
+      "def": "CREATE TRIGGER trg_catalog_items_touch_version BEFORE UPDATE ON public.catalog_items FOR EACH ROW EXECUTE FUNCTION fn_touch_version()",
+      "enabled": "O"
+    },
+    {
+      "table": "categories",
+      "name": "trg_categories_no_delete",
+      "def": "CREATE TRIGGER trg_categories_no_delete BEFORE DELETE ON public.categories FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "categories",
+      "name": "trg_categories_no_truncate",
+      "def": "CREATE TRIGGER trg_categories_no_truncate BEFORE TRUNCATE ON public.categories FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "categories",
+      "name": "trg_categories_touch_version",
+      "def": "CREATE TRIGGER trg_categories_touch_version BEFORE UPDATE ON public.categories FOR EACH ROW EXECUTE FUNCTION fn_touch_version()",
+      "enabled": "O"
+    },
+    {
+      "table": "companies",
+      "name": "trg_companies_no_delete",
+      "def": "CREATE TRIGGER trg_companies_no_delete BEFORE DELETE ON public.companies FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "companies",
+      "name": "trg_companies_no_truncate",
+      "def": "CREATE TRIGGER trg_companies_no_truncate BEFORE TRUNCATE ON public.companies FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "companies",
+      "name": "trg_companies_touch_version",
+      "def": "CREATE TRIGGER trg_companies_touch_version BEFORE UPDATE ON public.companies FOR EACH ROW EXECUTE FUNCTION fn_touch_version()",
+      "enabled": "O"
+    },
+    {
+      "table": "customer_contacts",
+      "name": "trg_customer_contacts_no_delete",
+      "def": "CREATE TRIGGER trg_customer_contacts_no_delete BEFORE DELETE ON public.customer_contacts FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "customer_contacts",
+      "name": "trg_customer_contacts_no_truncate",
+      "def": "CREATE TRIGGER trg_customer_contacts_no_truncate BEFORE TRUNCATE ON public.customer_contacts FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "customer_contacts",
+      "name": "trg_customer_contacts_touch_version",
+      "def": "CREATE TRIGGER trg_customer_contacts_touch_version BEFORE UPDATE ON public.customer_contacts FOR EACH ROW EXECUTE FUNCTION fn_touch_version()",
+      "enabled": "O"
+    },
+    {
+      "table": "customers",
+      "name": "trg_customers_check_owner_eligible_insert",
+      "def": "CREATE TRIGGER trg_customers_check_owner_eligible_insert BEFORE INSERT ON public.customers FOR EACH ROW EXECUTE FUNCTION fn_check_owner_eligible()",
+      "enabled": "O"
+    },
+    {
+      "table": "customers",
+      "name": "trg_customers_check_owner_eligible_update",
+      "def": "CREATE TRIGGER trg_customers_check_owner_eligible_update BEFORE UPDATE OF owner_user_id, status ON public.customers FOR EACH ROW EXECUTE FUNCTION fn_check_owner_eligible()",
+      "enabled": "O"
+    },
+    {
+      "table": "customers",
+      "name": "trg_customers_deferred_check",
+      "def": "CREATE CONSTRAINT TRIGGER trg_customers_deferred_check AFTER UPDATE OF owner_user_id ON public.customers DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION fn_customers_deferred_check()",
+      "enabled": "O"
+    },
+    {
+      "table": "customers",
+      "name": "trg_customers_no_delete",
+      "def": "CREATE TRIGGER trg_customers_no_delete BEFORE DELETE ON public.customers FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "customers",
+      "name": "trg_customers_no_truncate",
+      "def": "CREATE TRIGGER trg_customers_no_truncate BEFORE TRUNCATE ON public.customers FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "customers",
+      "name": "trg_customers_protect_created_by",
+      "def": "CREATE TRIGGER trg_customers_protect_created_by BEFORE UPDATE ON public.customers FOR EACH ROW EXECUTE FUNCTION fn_protect_created_by()",
+      "enabled": "O"
+    },
+    {
+      "table": "customers",
+      "name": "trg_customers_touch_version",
+      "def": "CREATE TRIGGER trg_customers_touch_version BEFORE UPDATE ON public.customers FOR EACH ROW EXECUTE FUNCTION fn_touch_version()",
+      "enabled": "O"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "trg_exchange_rates_guard",
+      "def": "CREATE TRIGGER trg_exchange_rates_guard BEFORE INSERT ON public.exchange_rates FOR EACH ROW EXECUTE FUNCTION fn_exchange_rates_guard()",
+      "enabled": "O"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "trg_exchange_rates_no_delete",
+      "def": "CREATE TRIGGER trg_exchange_rates_no_delete BEFORE DELETE ON public.exchange_rates FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "trg_exchange_rates_no_truncate",
+      "def": "CREATE TRIGGER trg_exchange_rates_no_truncate BEFORE TRUNCATE ON public.exchange_rates FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "trg_exchange_rates_no_update",
+      "def": "CREATE TRIGGER trg_exchange_rates_no_update BEFORE UPDATE ON public.exchange_rates FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "generated_documents",
+      "name": "trg_generated_documents_guard",
+      "def": "CREATE TRIGGER trg_generated_documents_guard BEFORE INSERT ON public.generated_documents FOR EACH ROW EXECUTE FUNCTION fn_generated_documents_guard()",
+      "enabled": "O"
+    },
+    {
+      "table": "generated_documents",
+      "name": "trg_generated_documents_no_delete",
+      "def": "CREATE TRIGGER trg_generated_documents_no_delete BEFORE DELETE ON public.generated_documents FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "generated_documents",
+      "name": "trg_generated_documents_no_truncate",
+      "def": "CREATE TRIGGER trg_generated_documents_no_truncate BEFORE TRUNCATE ON public.generated_documents FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "generated_documents",
+      "name": "trg_generated_documents_no_update",
+      "def": "CREATE TRIGGER trg_generated_documents_no_update BEFORE UPDATE ON public.generated_documents FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "payment_accounts",
+      "name": "trg_payment_accounts_no_delete",
+      "def": "CREATE TRIGGER trg_payment_accounts_no_delete BEFORE DELETE ON public.payment_accounts FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "payment_accounts",
+      "name": "trg_payment_accounts_no_truncate",
+      "def": "CREATE TRIGGER trg_payment_accounts_no_truncate BEFORE TRUNCATE ON public.payment_accounts FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "payment_accounts",
+      "name": "trg_payment_accounts_touch_version",
+      "def": "CREATE TRIGGER trg_payment_accounts_touch_version BEFORE UPDATE ON public.payment_accounts FOR EACH ROW EXECUTE FUNCTION fn_touch_version()",
+      "enabled": "O"
+    },
+    {
+      "table": "permissions",
+      "name": "trg_permissions_no_delete",
+      "def": "CREATE TRIGGER trg_permissions_no_delete BEFORE DELETE ON public.permissions FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "permissions",
+      "name": "trg_permissions_no_truncate",
+      "def": "CREATE TRIGGER trg_permissions_no_truncate BEFORE TRUNCATE ON public.permissions FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "provider_costs",
+      "name": "trg_provider_costs_no_delete",
+      "def": "CREATE TRIGGER trg_provider_costs_no_delete BEFORE DELETE ON public.provider_costs FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "provider_costs",
+      "name": "trg_provider_costs_no_truncate",
+      "def": "CREATE TRIGGER trg_provider_costs_no_truncate BEFORE TRUNCATE ON public.provider_costs FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "provider_costs",
+      "name": "trg_provider_costs_no_update",
+      "def": "CREATE TRIGGER trg_provider_costs_no_update BEFORE UPDATE ON public.provider_costs FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "providers",
+      "name": "trg_providers_check_merge",
+      "def": "CREATE TRIGGER trg_providers_check_merge BEFORE INSERT OR UPDATE ON public.providers FOR EACH ROW EXECUTE FUNCTION fn_check_merge()",
+      "enabled": "O"
+    },
+    {
+      "table": "providers",
+      "name": "trg_providers_no_delete",
+      "def": "CREATE TRIGGER trg_providers_no_delete BEFORE DELETE ON public.providers FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "providers",
+      "name": "trg_providers_no_truncate",
+      "def": "CREATE TRIGGER trg_providers_no_truncate BEFORE TRUNCATE ON public.providers FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "providers",
+      "name": "trg_providers_touch_version",
+      "def": "CREATE TRIGGER trg_providers_touch_version BEFORE UPDATE ON public.providers FOR EACH ROW EXECUTE FUNCTION fn_touch_version()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotation_folio_counters",
+      "name": "trg_quotation_folio_counters_guard",
+      "def": "CREATE TRIGGER trg_quotation_folio_counters_guard BEFORE INSERT OR UPDATE ON public.quotation_folio_counters FOR EACH ROW EXECUTE FUNCTION fn_folio_counter_guard()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotation_folio_counters",
+      "name": "trg_quotation_folio_counters_no_delete",
+      "def": "CREATE TRIGGER trg_quotation_folio_counters_no_delete BEFORE DELETE ON public.quotation_folio_counters FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotation_folio_counters",
+      "name": "trg_quotation_folio_counters_no_truncate",
+      "def": "CREATE TRIGGER trg_quotation_folio_counters_no_truncate BEFORE TRUNCATE ON public.quotation_folio_counters FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotation_items",
+      "name": "trg_quotation_items_guard",
+      "def": "CREATE TRIGGER trg_quotation_items_guard BEFORE INSERT OR DELETE OR UPDATE ON public.quotation_items FOR EACH ROW EXECUTE FUNCTION fn_quotation_items_guard()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotation_items",
+      "name": "trg_quotation_items_no_truncate",
+      "def": "CREATE TRIGGER trg_quotation_items_no_truncate BEFORE TRUNCATE ON public.quotation_items FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotation_reviews",
+      "name": "trg_quotation_reviews_guard",
+      "def": "CREATE TRIGGER trg_quotation_reviews_guard BEFORE INSERT ON public.quotation_reviews FOR EACH ROW EXECUTE FUNCTION fn_quotation_reviews_guard()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotation_reviews",
+      "name": "trg_quotation_reviews_no_delete",
+      "def": "CREATE TRIGGER trg_quotation_reviews_no_delete BEFORE DELETE ON public.quotation_reviews FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotation_reviews",
+      "name": "trg_quotation_reviews_no_truncate",
+      "def": "CREATE TRIGGER trg_quotation_reviews_no_truncate BEFORE TRUNCATE ON public.quotation_reviews FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotation_reviews",
+      "name": "trg_quotation_reviews_no_update",
+      "def": "CREATE TRIGGER trg_quotation_reviews_no_update BEFORE UPDATE ON public.quotation_reviews FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "trg_quotation_revisions_guard",
+      "def": "CREATE TRIGGER trg_quotation_revisions_guard BEFORE INSERT OR DELETE OR UPDATE ON public.quotation_revisions FOR EACH ROW EXECUTE FUNCTION fn_quotation_revisions_guard()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "trg_quotation_revisions_no_truncate",
+      "def": "CREATE TRIGGER trg_quotation_revisions_no_truncate BEFORE TRUNCATE ON public.quotation_revisions FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "trg_quotation_revisions_touch_version",
+      "def": "CREATE TRIGGER trg_quotation_revisions_touch_version BEFORE UPDATE ON public.quotation_revisions FOR EACH ROW EXECUTE FUNCTION fn_touch_version()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "trg_revisions_deferred_check",
+      "def": "CREATE CONSTRAINT TRIGGER trg_revisions_deferred_check AFTER UPDATE OF state ON public.quotation_revisions DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION fn_revisions_deferred_check()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotation_status_history",
+      "name": "trg_quotation_status_history_guard",
+      "def": "CREATE TRIGGER trg_quotation_status_history_guard BEFORE INSERT ON public.quotation_status_history FOR EACH ROW EXECUTE FUNCTION fn_quotation_status_history_guard()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotation_status_history",
+      "name": "trg_quotation_status_history_no_delete",
+      "def": "CREATE TRIGGER trg_quotation_status_history_no_delete BEFORE DELETE ON public.quotation_status_history FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotation_status_history",
+      "name": "trg_quotation_status_history_no_truncate",
+      "def": "CREATE TRIGGER trg_quotation_status_history_no_truncate BEFORE TRUNCATE ON public.quotation_status_history FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotation_status_history",
+      "name": "trg_quotation_status_history_no_update",
+      "def": "CREATE TRIGGER trg_quotation_status_history_no_update BEFORE UPDATE ON public.quotation_status_history FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotations",
+      "name": "trg_quotations_check_owner_eligible_insert",
+      "def": "CREATE TRIGGER trg_quotations_check_owner_eligible_insert BEFORE INSERT ON public.quotations FOR EACH ROW EXECUTE FUNCTION fn_check_owner_eligible()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotations",
+      "name": "trg_quotations_check_owner_eligible_update",
+      "def": "CREATE TRIGGER trg_quotations_check_owner_eligible_update BEFORE UPDATE OF owner_user_id ON public.quotations FOR EACH ROW EXECUTE FUNCTION fn_check_owner_eligible()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotations",
+      "name": "trg_quotations_deferred_check",
+      "def": "CREATE CONSTRAINT TRIGGER trg_quotations_deferred_check AFTER INSERT OR UPDATE ON public.quotations DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION fn_quotations_deferred_check()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotations",
+      "name": "trg_quotations_guard",
+      "def": "CREATE TRIGGER trg_quotations_guard BEFORE INSERT OR UPDATE ON public.quotations FOR EACH ROW EXECUTE FUNCTION fn_quotations_guard()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotations",
+      "name": "trg_quotations_no_delete",
+      "def": "CREATE TRIGGER trg_quotations_no_delete BEFORE DELETE ON public.quotations FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotations",
+      "name": "trg_quotations_no_truncate",
+      "def": "CREATE TRIGGER trg_quotations_no_truncate BEFORE TRUNCATE ON public.quotations FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "quotations",
+      "name": "trg_quotations_touch_version",
+      "def": "CREATE TRIGGER trg_quotations_touch_version BEFORE UPDATE ON public.quotations FOR EACH ROW EXECUTE FUNCTION fn_touch_version()",
+      "enabled": "O"
+    },
+    {
+      "table": "role_permissions",
+      "name": "trg_role_permissions_no_truncate",
+      "def": "CREATE TRIGGER trg_role_permissions_no_truncate BEFORE TRUNCATE ON public.role_permissions FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "roles",
+      "name": "trg_roles_no_delete",
+      "def": "CREATE TRIGGER trg_roles_no_delete BEFORE DELETE ON public.roles FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "roles",
+      "name": "trg_roles_no_truncate",
+      "def": "CREATE TRIGGER trg_roles_no_truncate BEFORE TRUNCATE ON public.roles FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "system_settings",
+      "name": "trg_system_settings_no_delete",
+      "def": "CREATE TRIGGER trg_system_settings_no_delete BEFORE DELETE ON public.system_settings FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "system_settings",
+      "name": "trg_system_settings_no_truncate",
+      "def": "CREATE TRIGGER trg_system_settings_no_truncate BEFORE TRUNCATE ON public.system_settings FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "system_settings",
+      "name": "trg_system_settings_touch_version",
+      "def": "CREATE TRIGGER trg_system_settings_touch_version BEFORE UPDATE ON public.system_settings FOR EACH ROW EXECUTE FUNCTION fn_touch_version()",
+      "enabled": "O"
+    },
+    {
+      "table": "users",
+      "name": "trg_users_guard",
+      "def": "CREATE TRIGGER trg_users_guard BEFORE UPDATE OF role_id ON public.users FOR EACH ROW EXECUTE FUNCTION fn_users_guard()",
+      "enabled": "O"
+    },
+    {
+      "table": "users",
+      "name": "trg_users_no_delete",
+      "def": "CREATE TRIGGER trg_users_no_delete BEFORE DELETE ON public.users FOR EACH ROW EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "users",
+      "name": "trg_users_no_truncate",
+      "def": "CREATE TRIGGER trg_users_no_truncate BEFORE TRUNCATE ON public.users FOR EACH STATEMENT EXECUTE FUNCTION fn_prevent_mutation()",
+      "enabled": "O"
+    },
+    {
+      "table": "users",
+      "name": "trg_users_preserve_last_admin",
+      "def": "CREATE TRIGGER trg_users_preserve_last_admin BEFORE UPDATE OF role_id, status ON public.users FOR EACH ROW EXECUTE FUNCTION fn_preserve_last_active_admin()",
+      "enabled": "O"
+    },
+    {
+      "table": "users",
+      "name": "trg_users_seller_requires_company",
+      "def": "CREATE TRIGGER trg_users_seller_requires_company BEFORE INSERT OR UPDATE OF role_id, company_id ON public.users FOR EACH ROW EXECUTE FUNCTION fn_seller_requires_company()",
+      "enabled": "O"
+    },
+    {
+      "table": "users",
+      "name": "trg_users_touch_version",
+      "def": "CREATE TRIGGER trg_users_touch_version BEFORE UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION fn_touch_version()",
+      "enabled": "O"
+    }
+  ],
+  "constraints": [
+    {
+      "table": "accounts",
+      "name": "accounts_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "accounts",
+      "name": "ck_accounts_credential_password",
+      "def": "CHECK (((provider_id <> 'credential'::text) OR (password IS NOT NULL)))"
+    },
+    {
+      "table": "accounts",
+      "name": "fk_accounts_user_id",
+      "def": "FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "accounts",
+      "name": "uq_accounts_provider_account",
+      "def": "UNIQUE (provider_id, account_id)"
+    },
+    {
+      "table": "activation_invitations",
+      "name": "activation_invitations_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "activation_invitations",
+      "name": "ck_activation_token_hash",
+      "def": "CHECK ((token_hash ~ '^[0-9a-f]{64}$'::text))"
+    },
+    {
+      "table": "activation_invitations",
+      "name": "fk_activation_invitations_created_by",
+      "def": "FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "activation_invitations",
+      "name": "fk_activation_invitations_user_id",
+      "def": "FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "activation_invitations",
+      "name": "uq_activation_invitations_token_hash",
+      "def": "UNIQUE (token_hash)"
+    },
+    {
+      "table": "audit_logs",
+      "name": "audit_logs_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "audit_logs",
+      "name": "ck_audit_logs_action_format",
+      "def": "CHECK ((action ~ '^[A-Z][A-Z0-9_]*([.][A-Z][A-Z0-9_]*)*$'::text))"
+    },
+    {
+      "table": "audit_logs",
+      "name": "ck_audit_logs_actor_coherence",
+      "def": "CHECK ((((actor_type = 'USER'::audit_actor_type) AND (actor_user_id IS NOT NULL)) OR ((actor_type <> 'USER'::audit_actor_type) AND (actor_user_id IS NULL))))"
+    },
+    {
+      "table": "audit_logs",
+      "name": "ck_audit_logs_attempted_identifier_hmac",
+      "def": "CHECK (((attempted_identifier_hmac IS NULL) OR ((attempted_identifier_hmac ~ '^[0-9a-f]{64}$'::text) AND (actor_type = 'ANONYMOUS'::audit_actor_type) AND (result = 'FAILURE'::audit_result) AND (action = 'AUTH.LOGIN_FAILURE'::text))))"
+    },
+    {
+      "table": "audit_logs",
+      "name": "ck_audit_logs_metadata_no_secrets",
+      "def": "CHECK (((metadata IS NULL) OR (NOT fn_jsonb_has_forbidden_keys(metadata))))"
+    },
+    {
+      "table": "audit_logs",
+      "name": "ck_audit_logs_metadata_object",
+      "def": "CHECK (((metadata IS NULL) OR (jsonb_typeof(metadata) = 'object'::text)))"
+    },
+    {
+      "table": "audit_logs",
+      "name": "ck_audit_logs_metadata_size",
+      "def": "CHECK (((metadata IS NULL) OR (pg_column_size(metadata) <= 8192)))"
+    },
+    {
+      "table": "audit_logs",
+      "name": "ck_audit_logs_target_both_or_neither",
+      "def": "CHECK (((target_type IS NULL) = (target_id IS NULL)))"
+    },
+    {
+      "table": "audit_logs",
+      "name": "ck_audit_logs_target_type_format",
+      "def": "CHECK (((target_type IS NULL) OR (target_type ~ '^[a-z][a-z_]*$'::text)))"
+    },
+    {
+      "table": "audit_logs",
+      "name": "ck_audit_logs_target_user_coherence",
+      "def": "CHECK (((((NOT (target_type IS DISTINCT FROM 'user'::text)) AND (target_user_id IS NOT NULL) AND (target_user_id = target_id)) OR ((target_type IS DISTINCT FROM 'user'::text) AND (target_user_id IS NULL))) IS TRUE))"
+    },
+    {
+      "table": "audit_logs",
+      "name": "fk_audit_logs_actor_user_id",
+      "def": "FOREIGN KEY (actor_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "audit_logs",
+      "name": "fk_audit_logs_target_user_id",
+      "def": "FOREIGN KEY (target_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "catalog_items",
+      "name": "catalog_items_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "catalog_items",
+      "name": "ck_catalog_items_cabys_format",
+      "def": "CHECK (((cabys_code IS NULL) OR (cabys_code ~ '^[0-9]{13}$'::text)))"
+    },
+    {
+      "table": "catalog_items",
+      "name": "ck_catalog_items_merge_coherence",
+      "def": "CHECK ((((status = 'MERGED'::catalog_review_status) AND (merged_into_id IS NOT NULL)) OR ((status <> 'MERGED'::catalog_review_status) AND (merged_into_id IS NULL))))"
+    },
+    {
+      "table": "catalog_items",
+      "name": "ck_catalog_items_no_self_merge",
+      "def": "CHECK (((merged_into_id IS NULL) OR (merged_into_id <> id)))"
+    },
+    {
+      "table": "catalog_items",
+      "name": "ck_catalog_items_review_coherence",
+      "def": "CHECK ((((status = 'PENDING_REVIEW'::catalog_review_status) AND (reviewed_by_user_id IS NULL) AND (reviewed_at IS NULL)) OR ((status <> 'PENDING_REVIEW'::catalog_review_status) AND (reviewed_by_user_id IS NOT NULL) AND (reviewed_at IS NOT NULL))))"
+    },
+    {
+      "table": "catalog_items",
+      "name": "fk_catalog_items_category_id",
+      "def": "FOREIGN KEY (category_id) REFERENCES categories(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "catalog_items",
+      "name": "fk_catalog_items_merged_into_id",
+      "def": "FOREIGN KEY (merged_into_id) REFERENCES catalog_items(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "catalog_items",
+      "name": "fk_catalog_items_proposed_by_user_id",
+      "def": "FOREIGN KEY (proposed_by_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "catalog_items",
+      "name": "fk_catalog_items_reviewed_by_user_id",
+      "def": "FOREIGN KEY (reviewed_by_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "categories",
+      "name": "categories_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "companies",
+      "name": "ck_companies_name_nonblank",
+      "def": "CHECK ((length(btrim(name)) > 0))"
+    },
+    {
+      "table": "companies",
+      "name": "companies_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "customer_contacts",
+      "name": "customer_contacts_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "customer_contacts",
+      "name": "fk_customer_contacts_customer_id",
+      "def": "FOREIGN KEY (customer_id) REFERENCES customers(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "customers",
+      "name": "ck_customers_cabys_format",
+      "def": "CHECK (((economic_activity_cabys IS NULL) OR (economic_activity_cabys ~ '^[0-9]{13}$'::text)))"
+    },
+    {
+      "table": "customers",
+      "name": "ck_customers_email_normalized",
+      "def": "CHECK ((email = lower(btrim(email))))"
+    },
+    {
+      "table": "customers",
+      "name": "ck_customers_identification_both_or_neither",
+      "def": "CHECK (((identification_type IS NULL) = (identification_number IS NULL)))"
+    },
+    {
+      "table": "customers",
+      "name": "ck_customers_identification_format",
+      "def": "CHECK ((((identification_type IS DISTINCT FROM 'FISICA'::identification_type) OR (identification_number ~ '^[0-9]{9}$'::text)) AND ((identification_type IS DISTINCT FROM 'JURIDICA'::identification_type) OR (identification_number ~ '^[0-9]{10}$'::text)) AND ((identification_type IS DISTINCT FROM 'DIMEX'::identification_type) OR (identification_number ~ '^[0-9]{11,12}$'::text)) AND ((identification_type IS DISTINCT FROM 'NITE'::identification_type) OR (identification_number ~ '^[0-9]{9,10}$'::text)) AND ((identification_type IS DISTINCT FROM 'PASAPORTE'::identification_type) OR ((length(identification_number) >= 3) AND (length(identification_number) <= 20)))))"
+    },
+    {
+      "table": "customers",
+      "name": "ck_customers_status_coherence",
+      "def": "CHECK ((((status = 'ACTIVE'::customer_status) AND (deactivated_at IS NULL) AND (deactivated_by_user_id IS NULL)) OR ((status = 'INACTIVE'::customer_status) AND (deactivated_at IS NOT NULL) AND (deactivated_by_user_id IS NOT NULL))))"
+    },
+    {
+      "table": "customers",
+      "name": "customers_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "customers",
+      "name": "fk_customers_created_by_user_id",
+      "def": "FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "customers",
+      "name": "fk_customers_deactivated_by_user_id",
+      "def": "FOREIGN KEY (deactivated_by_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "customers",
+      "name": "fk_customers_owner_user_id",
+      "def": "FOREIGN KEY (owner_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "customers",
+      "name": "trg_customers_deferred_check",
+      "def": "TRIGGER DEFERRABLE INITIALLY DEFERRED"
+    },
+    {
+      "table": "email_change_requests",
+      "name": "ck_email_change_email_normalized",
+      "def": "CHECK ((new_email = lower(btrim(new_email))))"
+    },
+    {
+      "table": "email_change_requests",
+      "name": "ck_email_change_token_hash",
+      "def": "CHECK ((token_hash ~ '^[0-9a-f]{64}$'::text))"
+    },
+    {
+      "table": "email_change_requests",
+      "name": "email_change_requests_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "email_change_requests",
+      "name": "fk_email_change_actor",
+      "def": "FOREIGN KEY (requested_by_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "email_change_requests",
+      "name": "fk_email_change_user",
+      "def": "FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "email_change_requests",
+      "name": "uq_email_change_token_hash",
+      "def": "UNIQUE (token_hash)"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "ck_exchange_rates_manual_creator",
+      "def": "CHECK ((((source = 'MANUAL'::exchange_rate_source) AND (created_by_user_id IS NOT NULL)) OR ((source = 'BCCR'::exchange_rate_source) AND (created_by_user_id IS NULL))))"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "ck_exchange_rates_pair_v1",
+      "def": "CHECK (((base_currency = 'USD'::text) AND (quote_currency = 'CRC'::text)))"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "ck_exchange_rates_positive",
+      "def": "CHECK (((buy_rate > (0)::numeric) AND (sell_rate > (0)::numeric)))"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "ck_exchange_rates_rates_not_nan",
+      "def": "CHECK (((buy_rate <> 'NaN'::numeric) AND (sell_rate <> 'NaN'::numeric)))"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "ck_exchange_rates_sell_gte_buy",
+      "def": "CHECK ((sell_rate >= buy_rate))"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "ck_exchange_rates_supersedes_manual",
+      "def": "CHECK (((supersedes_id IS NULL) OR (source = 'MANUAL'::exchange_rate_source)))"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "ck_exchange_rates_supersedes_not_self",
+      "def": "CHECK (((supersedes_id IS NULL) OR (supersedes_id <> id)))"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "exchange_rates_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "fk_exchange_rates_created_by_user_id",
+      "def": "FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "fk_exchange_rates_supersedes_id_rate_date",
+      "def": "FOREIGN KEY (supersedes_id, rate_date) REFERENCES exchange_rates(id, rate_date) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "uq_exchange_rates_id_rate_date",
+      "def": "UNIQUE (id, rate_date)"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "uq_exchange_rates_supersedes_id",
+      "def": "UNIQUE (supersedes_id)"
+    },
+    {
+      "table": "generated_documents",
+      "name": "ck_generated_documents_byte_size_positive",
+      "def": "CHECK ((byte_size > 0))"
+    },
+    {
+      "table": "generated_documents",
+      "name": "ck_generated_documents_file_name_length",
+      "def": "CHECK (((length(file_name) >= 1) AND (length(file_name) <= 255)))"
+    },
+    {
+      "table": "generated_documents",
+      "name": "ck_generated_documents_mime_type_pdf",
+      "def": "CHECK (((kind <> 'QUOTATION_PDF'::generated_document_kind) OR (mime_type = 'application/pdf'::text)))"
+    },
+    {
+      "table": "generated_documents",
+      "name": "ck_generated_documents_sha256_format",
+      "def": "CHECK ((sha256 ~ '^[0-9a-f]{64}$'::text))"
+    },
+    {
+      "table": "generated_documents",
+      "name": "ck_generated_documents_storage_key_format",
+      "def": "CHECK ((((length(storage_key) >= 1) AND (length(storage_key) <= 1024)) AND (storage_key !~ '^/'::text)))"
+    },
+    {
+      "table": "generated_documents",
+      "name": "ck_generated_documents_storage_provider",
+      "def": "CHECK ((storage_provider = ANY (ARRAY['R2'::text, 'LOCAL_FS'::text])))"
+    },
+    {
+      "table": "generated_documents",
+      "name": "fk_generated_documents_created_by_user_id",
+      "def": "FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "generated_documents",
+      "name": "fk_generated_documents_quotation_id_revision_id",
+      "def": "FOREIGN KEY (quotation_id, revision_id) REFERENCES quotation_revisions(quotation_id, id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "generated_documents",
+      "name": "generated_documents_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "generated_documents",
+      "name": "uq_generated_documents_sha_revision",
+      "def": "UNIQUE (revision_id, kind, sha256)"
+    },
+    {
+      "table": "passkeys",
+      "name": "fk_passkeys_user_id",
+      "def": "FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "passkeys",
+      "name": "passkeys_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "passkeys",
+      "name": "uq_passkeys_credential_id",
+      "def": "UNIQUE (credential_id)"
+    },
+    {
+      "table": "payment_accounts",
+      "name": "ck_payment_accounts_nonblank",
+      "def": "CHECK (((length(btrim(bank)) > 0) AND (length(btrim(account_number)) > 0)))"
+    },
+    {
+      "table": "payment_accounts",
+      "name": "payment_accounts_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "permissions",
+      "name": "ck_permissions_code_format",
+      "def": "CHECK ((code ~ '^[a-z][a-z0-9]*(_[a-z0-9]+)*[.][a-z][a-z0-9]*(_[a-z0-9]+)*$'::text))"
+    },
+    {
+      "table": "permissions",
+      "name": "permissions_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "permissions",
+      "name": "uq_permissions_code",
+      "def": "UNIQUE (code)"
+    },
+    {
+      "table": "provider_costs",
+      "name": "ck_provider_costs_item_name",
+      "def": "CHECK ((length(btrim(item_name)) > 0))"
+    },
+    {
+      "table": "provider_costs",
+      "name": "ck_provider_costs_unit_cost",
+      "def": "CHECK (((unit_cost >= (0)::numeric) AND (unit_cost <> 'NaN'::numeric)))"
+    },
+    {
+      "table": "provider_costs",
+      "name": "fk_provider_costs_catalog_item_id",
+      "def": "FOREIGN KEY (catalog_item_id) REFERENCES catalog_items(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "provider_costs",
+      "name": "fk_provider_costs_created_by",
+      "def": "FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "provider_costs",
+      "name": "fk_provider_costs_provider_id",
+      "def": "FOREIGN KEY (provider_id) REFERENCES providers(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "provider_costs",
+      "name": "provider_costs_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "providers",
+      "name": "ck_providers_identification_both_or_neither",
+      "def": "CHECK (((identification_type IS NULL) = (identification_number IS NULL)))"
+    },
+    {
+      "table": "providers",
+      "name": "ck_providers_identification_format",
+      "def": "CHECK ((((identification_type IS DISTINCT FROM 'FISICA'::identification_type) OR (identification_number ~ '^[0-9]{9}$'::text)) AND ((identification_type IS DISTINCT FROM 'JURIDICA'::identification_type) OR (identification_number ~ '^[0-9]{10}$'::text)) AND ((identification_type IS DISTINCT FROM 'DIMEX'::identification_type) OR (identification_number ~ '^[0-9]{11,12}$'::text)) AND ((identification_type IS DISTINCT FROM 'NITE'::identification_type) OR (identification_number ~ '^[0-9]{9,10}$'::text)) AND ((identification_type IS DISTINCT FROM 'PASAPORTE'::identification_type) OR ((length(identification_number) >= 3) AND (length(identification_number) <= 20)))))"
+    },
+    {
+      "table": "providers",
+      "name": "ck_providers_merge_coherence",
+      "def": "CHECK ((((status = 'MERGED'::catalog_review_status) AND (merged_into_id IS NOT NULL)) OR ((status <> 'MERGED'::catalog_review_status) AND (merged_into_id IS NULL))))"
+    },
+    {
+      "table": "providers",
+      "name": "ck_providers_no_self_merge",
+      "def": "CHECK (((merged_into_id IS NULL) OR (merged_into_id <> id)))"
+    },
+    {
+      "table": "providers",
+      "name": "ck_providers_review_coherence",
+      "def": "CHECK ((((status = 'PENDING_REVIEW'::catalog_review_status) AND (reviewed_by_user_id IS NULL) AND (reviewed_at IS NULL)) OR ((status <> 'PENDING_REVIEW'::catalog_review_status) AND (reviewed_by_user_id IS NOT NULL) AND (reviewed_at IS NOT NULL))))"
+    },
+    {
+      "table": "providers",
+      "name": "fk_providers_merged_into_id",
+      "def": "FOREIGN KEY (merged_into_id) REFERENCES providers(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "providers",
+      "name": "fk_providers_proposed_by_user_id",
+      "def": "FOREIGN KEY (proposed_by_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "providers",
+      "name": "fk_providers_reviewed_by_user_id",
+      "def": "FOREIGN KEY (reviewed_by_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "providers",
+      "name": "providers_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "quotation_folio_counters",
+      "name": "ck_quotation_folio_counters_non_negative",
+      "def": "CHECK ((last_number >= 0))"
+    },
+    {
+      "table": "quotation_folio_counters",
+      "name": "ck_quotation_folio_counters_year_range",
+      "def": "CHECK (((folio_year >= 2000) AND (folio_year <= 9999)))"
+    },
+    {
+      "table": "quotation_folio_counters",
+      "name": "quotation_folio_counters_pkey",
+      "def": "PRIMARY KEY (folio_year)"
+    },
+    {
+      "table": "quotation_items",
+      "name": "ck_quotation_items_line_number_positive",
+      "def": "CHECK ((line_number > 0))"
+    },
+    {
+      "table": "quotation_items",
+      "name": "ck_quotation_items_margin_range",
+      "def": "CHECK (((margin_percent > (0)::numeric) AND (margin_percent <= (100)::numeric) AND (margin_percent <> 'NaN'::numeric)))"
+    },
+    {
+      "table": "quotation_items",
+      "name": "ck_quotation_items_provider_snapshot",
+      "def": "CHECK (((provider_id IS NULL) OR (provider_name_snapshot IS NOT NULL)))"
+    },
+    {
+      "table": "quotation_items",
+      "name": "ck_quotation_items_quantity_positive",
+      "def": "CHECK (((quantity > (0)::numeric) AND (quantity <> 'NaN'::numeric)))"
+    },
+    {
+      "table": "quotation_items",
+      "name": "ck_quotation_items_tax_percent_v1",
+      "def": "CHECK (((tax_percent = (13)::numeric) AND (tax_percent <> 'NaN'::numeric)))"
+    },
+    {
+      "table": "quotation_items",
+      "name": "ck_quotation_items_unit_cost_non_negative",
+      "def": "CHECK (((unit_cost >= (0)::numeric) AND (unit_cost <> 'NaN'::numeric)))"
+    },
+    {
+      "table": "quotation_items",
+      "name": "ck_quotation_items_unit_price_non_negative",
+      "def": "CHECK (((unit_price >= (0)::numeric) AND (unit_price <> 'NaN'::numeric)))"
+    },
+    {
+      "table": "quotation_items",
+      "name": "fk_quotation_items_catalog_item_id",
+      "def": "FOREIGN KEY (catalog_item_id) REFERENCES catalog_items(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "quotation_items",
+      "name": "fk_quotation_items_provider_id",
+      "def": "FOREIGN KEY (provider_id) REFERENCES providers(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "quotation_items",
+      "name": "fk_quotation_items_quotation_id_revision_id",
+      "def": "FOREIGN KEY (quotation_id, revision_id) REFERENCES quotation_revisions(quotation_id, id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "quotation_items",
+      "name": "quotation_items_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "quotation_items",
+      "name": "uq_quotation_items_revision_line",
+      "def": "UNIQUE (revision_id, line_number)"
+    },
+    {
+      "table": "quotation_reviews",
+      "name": "fk_quotation_reviews_quotation_id_revision_id",
+      "def": "FOREIGN KEY (quotation_id, revision_id) REFERENCES quotation_revisions(quotation_id, id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "quotation_reviews",
+      "name": "fk_quotation_reviews_reviewer_user_id",
+      "def": "FOREIGN KEY (reviewer_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "quotation_reviews",
+      "name": "quotation_reviews_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "ck_quotation_revisions_fx_applied_rate_requires_exchange_rate",
+      "def": "CHECK (((fx_applied_rate IS NULL) OR (exchange_rate_id IS NOT NULL)))"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "ck_quotation_revisions_fx_coherence",
+      "def": "CHECK ((((fx_buy IS NULL) AND (fx_sell IS NULL) AND (fx_rate_date IS NULL) AND (fx_source IS NULL) AND (exchange_rate_id IS NULL)) OR ((fx_buy IS NOT NULL) AND (fx_sell IS NOT NULL) AND (fx_rate_date IS NOT NULL) AND (fx_source IS NOT NULL) AND (exchange_rate_id IS NOT NULL))))"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "ck_quotation_revisions_fx_values_positive",
+      "def": "CHECK ((((fx_buy IS NULL) OR ((fx_buy > (0)::numeric) AND (fx_buy <> 'NaN'::numeric))) AND ((fx_sell IS NULL) OR ((fx_sell > (0)::numeric) AND (fx_sell <> 'NaN'::numeric))) AND ((fx_applied_rate IS NULL) OR ((fx_applied_rate > (0)::numeric) AND (fx_applied_rate <> 'NaN'::numeric)))))"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "ck_quotation_revisions_issued_coherence",
+      "def": "CHECK ((((state = 'DRAFT'::quotation_revision_state) AND (issued_at IS NULL) AND (issued_by_user_id IS NULL)) OR ((state = 'ISSUED'::quotation_revision_state) AND (issued_at IS NOT NULL) AND (issued_by_user_id IS NOT NULL))))"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "ck_quotation_revisions_number_positive",
+      "def": "CHECK ((revision_number > 0))"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "ck_quotation_revisions_total_equals_sum",
+      "def": "CHECK ((total = (subtotal + tax_total)))"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "ck_quotation_revisions_totals_coherence",
+      "def": "CHECK ((((state = 'DRAFT'::quotation_revision_state) AND (subtotal IS NULL) AND (tax_total IS NULL) AND (total IS NULL)) OR ((state = 'ISSUED'::quotation_revision_state) AND (subtotal IS NOT NULL) AND (tax_total IS NOT NULL) AND (total IS NOT NULL))))"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "ck_quotation_revisions_totals_non_negative_finite",
+      "def": "CHECK ((((subtotal IS NULL) OR ((subtotal >= (0)::numeric) AND (subtotal <> ALL (ARRAY['NaN'::numeric, 'Infinity'::numeric, '-Infinity'::numeric])))) AND ((tax_total IS NULL) OR ((tax_total >= (0)::numeric) AND (tax_total <> ALL (ARRAY['NaN'::numeric, 'Infinity'::numeric, '-Infinity'::numeric])))) AND ((total IS NULL) OR ((total >= (0)::numeric) AND (total <> ALL (ARRAY['NaN'::numeric, 'Infinity'::numeric, '-Infinity'::numeric]))))))"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "fk_quotation_revisions_created_by_user_id",
+      "def": "FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "fk_quotation_revisions_customer_id",
+      "def": "FOREIGN KEY (customer_id) REFERENCES customers(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "fk_quotation_revisions_exchange_rate_id",
+      "def": "FOREIGN KEY (exchange_rate_id) REFERENCES exchange_rates(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "fk_quotation_revisions_issued_by_user_id",
+      "def": "FOREIGN KEY (issued_by_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "fk_quotation_revisions_quotation_id",
+      "def": "FOREIGN KEY (quotation_id) REFERENCES quotations(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "fk_quotation_revisions_seller_user_id",
+      "def": "FOREIGN KEY (seller_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "quotation_revisions_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "trg_revisions_deferred_check",
+      "def": "TRIGGER DEFERRABLE INITIALLY DEFERRED"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "uq_quotation_revisions_number",
+      "def": "UNIQUE (quotation_id, revision_number)"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "uq_quotation_revisions_quotation_id_id",
+      "def": "UNIQUE (quotation_id, id)"
+    },
+    {
+      "table": "quotation_status_history",
+      "name": "ck_quotation_status_history_from_values",
+      "def": "CHECK (((from_status IS NULL) OR (from_status = ANY (ARRAY['DRAFT'::text, 'ISSUED'::text, 'SENT'::text, 'WON'::text, 'LOST'::text, 'CANCELLED'::text]))))"
+    },
+    {
+      "table": "quotation_status_history",
+      "name": "ck_quotation_status_history_revision_required",
+      "def": "CHECK (((to_status <> ALL (ARRAY['ISSUED'::text, 'SENT'::text, 'WON'::text])) OR (revision_id IS NOT NULL)))"
+    },
+    {
+      "table": "quotation_status_history",
+      "name": "ck_quotation_status_history_to_values",
+      "def": "CHECK ((to_status = ANY (ARRAY['DRAFT'::text, 'ISSUED'::text, 'SENT'::text, 'WON'::text, 'LOST'::text, 'CANCELLED'::text])))"
+    },
+    {
+      "table": "quotation_status_history",
+      "name": "fk_quotation_status_history_changed_by_user_id",
+      "def": "FOREIGN KEY (changed_by_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "quotation_status_history",
+      "name": "fk_quotation_status_history_quotation_id",
+      "def": "FOREIGN KEY (quotation_id) REFERENCES quotations(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "quotation_status_history",
+      "name": "fk_quotation_status_history_quotation_id_revision_id",
+      "def": "FOREIGN KEY (quotation_id, revision_id) REFERENCES quotation_revisions(quotation_id, id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "quotation_status_history",
+      "name": "quotation_status_history_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "quotation_status_history",
+      "name": "uq_quotation_status_history_seq",
+      "def": "UNIQUE (seq)"
+    },
+    {
+      "table": "quotations",
+      "name": "ck_quotations_folio_coherence",
+      "def": "CHECK (((((folio_year IS NULL) AND (folio_number IS NULL)) OR ((folio_year IS NOT NULL) AND (folio_number IS NOT NULL))) AND ((status <> 'DRAFT'::text) OR (folio_year IS NULL)) AND ((status <> ALL (ARRAY['ISSUED'::text, 'SENT'::text, 'WON'::text, 'LOST'::text])) OR (folio_year IS NOT NULL))))"
+    },
+    {
+      "table": "quotations",
+      "name": "ck_quotations_folio_values",
+      "def": "CHECK (((folio_year IS NULL) OR (((folio_year >= 2000) AND (folio_year <= 9999)) AND (folio_number > 0))))"
+    },
+    {
+      "table": "quotations",
+      "name": "ck_quotations_sold_coherence",
+      "def": "CHECK ((((status = 'WON'::text) AND (sold_revision_id IS NOT NULL)) OR ((status <> 'WON'::text) AND (sold_revision_id IS NULL))))"
+    },
+    {
+      "table": "quotations",
+      "name": "ck_quotations_status_values",
+      "def": "CHECK ((status = ANY (ARRAY['DRAFT'::text, 'ISSUED'::text, 'SENT'::text, 'WON'::text, 'LOST'::text, 'CANCELLED'::text])))"
+    },
+    {
+      "table": "quotations",
+      "name": "fk_quotations_created_by_user_id",
+      "def": "FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "quotations",
+      "name": "fk_quotations_customer_id",
+      "def": "FOREIGN KEY (customer_id) REFERENCES customers(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "quotations",
+      "name": "fk_quotations_id_sold_revision_id",
+      "def": "FOREIGN KEY (id, sold_revision_id) REFERENCES quotation_revisions(quotation_id, id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "quotations",
+      "name": "fk_quotations_owner_user_id",
+      "def": "FOREIGN KEY (owner_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "quotations",
+      "name": "quotations_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "quotations",
+      "name": "trg_quotations_deferred_check",
+      "def": "TRIGGER DEFERRABLE INITIALLY DEFERRED"
+    },
+    {
+      "table": "quotations",
+      "name": "uq_quotations_folio",
+      "def": "UNIQUE (folio_year, folio_number)"
+    },
+    {
+      "table": "rate_limits",
+      "name": "ck_rate_limits_count",
+      "def": "CHECK ((count >= 0))"
+    },
+    {
+      "table": "rate_limits",
+      "name": "rate_limits_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "rate_limits",
+      "name": "uq_rate_limits_key",
+      "def": "UNIQUE (key)"
+    },
+    {
+      "table": "role_permissions",
+      "name": "fk_role_permissions_permission_id",
+      "def": "FOREIGN KEY (permission_id) REFERENCES permissions(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "role_permissions",
+      "name": "fk_role_permissions_role_id",
+      "def": "FOREIGN KEY (role_id) REFERENCES roles(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "role_permissions",
+      "name": "pk_role_permissions",
+      "def": "PRIMARY KEY (role_id, permission_id)"
+    },
+    {
+      "table": "roles",
+      "name": "roles_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "roles",
+      "name": "uq_roles_code",
+      "def": "UNIQUE (code)"
+    },
+    {
+      "table": "sessions",
+      "name": "ck_sessions_auth_method",
+      "def": "CHECK ((auth_method = ANY (ARRAY['password'::text, 'passkey'::text])))"
+    },
+    {
+      "table": "sessions",
+      "name": "fk_sessions_user_id",
+      "def": "FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "sessions",
+      "name": "sessions_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "sessions",
+      "name": "uq_sessions_token",
+      "def": "UNIQUE (token)"
+    },
+    {
+      "table": "system_settings",
+      "name": "ck_system_settings_margin_range",
+      "def": "CHECK (((margin_warning_percent > (0)::numeric) AND (margin_warning_percent <= (100)::numeric) AND (margin_warning_percent <> 'NaN'::numeric)))"
+    },
+    {
+      "table": "system_settings",
+      "name": "ck_system_settings_singleton",
+      "def": "CHECK (id)"
+    },
+    {
+      "table": "system_settings",
+      "name": "fk_system_settings_updated_by_user_id",
+      "def": "FOREIGN KEY (updated_by_user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "system_settings",
+      "name": "system_settings_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "two_factors",
+      "name": "ck_two_factors_failed_count",
+      "def": "CHECK ((failed_verification_count >= 0))"
+    },
+    {
+      "table": "two_factors",
+      "name": "fk_two_factors_user_id",
+      "def": "FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "two_factors",
+      "name": "two_factors_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "two_factors",
+      "name": "uq_two_factors_user_id",
+      "def": "UNIQUE (user_id)"
+    },
+    {
+      "table": "users",
+      "name": "ck_users_email_normalized",
+      "def": "CHECK ((email = lower(btrim(email))))"
+    },
+    {
+      "table": "users",
+      "name": "ck_users_status_coherence",
+      "def": "CHECK ((((status = 'PENDING_ACTIVATION'::user_status) AND (activated_at IS NULL) AND (deactivated_at IS NULL)) OR ((status = 'ACTIVE'::user_status) AND (activated_at IS NOT NULL) AND (deactivated_at IS NULL)) OR ((status = 'INACTIVE'::user_status) AND (deactivated_at IS NOT NULL) AND ((activated_at IS NULL) OR (deactivated_at >= activated_at)))))"
+    },
+    {
+      "table": "users",
+      "name": "fk_users_company_id",
+      "def": "FOREIGN KEY (company_id) REFERENCES companies(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "users",
+      "name": "fk_users_role_id",
+      "def": "FOREIGN KEY (role_id) REFERENCES roles(id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table": "users",
+      "name": "uq_users_email",
+      "def": "UNIQUE (email)"
+    },
+    {
+      "table": "users",
+      "name": "users_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "verifications",
+      "name": "verifications_pkey",
+      "def": "PRIMARY KEY (id)"
+    }
+  ],
+  "indexes": [
+    {
+      "table": "accounts",
+      "name": "accounts_pkey",
+      "def": "CREATE UNIQUE INDEX accounts_pkey ON public.accounts USING btree (id)"
+    },
+    {
+      "table": "accounts",
+      "name": "ix_accounts_user_id",
+      "def": "CREATE INDEX ix_accounts_user_id ON public.accounts USING btree (user_id)"
+    },
+    {
+      "table": "accounts",
+      "name": "uq_accounts_provider_account",
+      "def": "CREATE UNIQUE INDEX uq_accounts_provider_account ON public.accounts USING btree (provider_id, account_id)"
+    },
+    {
+      "table": "activation_invitations",
+      "name": "activation_invitations_pkey",
+      "def": "CREATE UNIQUE INDEX activation_invitations_pkey ON public.activation_invitations USING btree (id)"
+    },
+    {
+      "table": "activation_invitations",
+      "name": "ix_activation_invitations_expires_at",
+      "def": "CREATE INDEX ix_activation_invitations_expires_at ON public.activation_invitations USING btree (expires_at)"
+    },
+    {
+      "table": "activation_invitations",
+      "name": "ix_activation_invitations_user_id",
+      "def": "CREATE INDEX ix_activation_invitations_user_id ON public.activation_invitations USING btree (user_id)"
+    },
+    {
+      "table": "activation_invitations",
+      "name": "uq_activation_invitations_live_user",
+      "def": "CREATE UNIQUE INDEX uq_activation_invitations_live_user ON public.activation_invitations USING btree (user_id) WHERE (used_at IS NULL)"
+    },
+    {
+      "table": "activation_invitations",
+      "name": "uq_activation_invitations_token_hash",
+      "def": "CREATE UNIQUE INDEX uq_activation_invitations_token_hash ON public.activation_invitations USING btree (token_hash)"
+    },
+    {
+      "table": "audit_logs",
+      "name": "audit_logs_pkey",
+      "def": "CREATE UNIQUE INDEX audit_logs_pkey ON public.audit_logs USING btree (id)"
+    },
+    {
+      "table": "audit_logs",
+      "name": "ix_audit_logs_actor_user_id",
+      "def": "CREATE INDEX ix_audit_logs_actor_user_id ON public.audit_logs USING btree (actor_user_id) WHERE (actor_user_id IS NOT NULL)"
+    },
+    {
+      "table": "audit_logs",
+      "name": "ix_audit_logs_occurred_at",
+      "def": "CREATE INDEX ix_audit_logs_occurred_at ON public.audit_logs USING btree (occurred_at DESC NULLS LAST)"
+    },
+    {
+      "table": "audit_logs",
+      "name": "ix_audit_logs_target",
+      "def": "CREATE INDEX ix_audit_logs_target ON public.audit_logs USING btree (target_type, target_id) WHERE (target_type IS NOT NULL)"
+    },
+    {
+      "table": "audit_logs",
+      "name": "ix_audit_logs_target_user_id",
+      "def": "CREATE INDEX ix_audit_logs_target_user_id ON public.audit_logs USING btree (target_user_id) WHERE (target_user_id IS NOT NULL)"
+    },
+    {
+      "table": "catalog_items",
+      "name": "catalog_items_pkey",
+      "def": "CREATE UNIQUE INDEX catalog_items_pkey ON public.catalog_items USING btree (id)"
+    },
+    {
+      "table": "catalog_items",
+      "name": "ix_catalog_items_category_id",
+      "def": "CREATE INDEX ix_catalog_items_category_id ON public.catalog_items USING btree (category_id)"
+    },
+    {
+      "table": "catalog_items",
+      "name": "ix_catalog_items_merged_into",
+      "def": "CREATE INDEX ix_catalog_items_merged_into ON public.catalog_items USING btree (merged_into_id) WHERE (merged_into_id IS NOT NULL)"
+    },
+    {
+      "table": "catalog_items",
+      "name": "ix_catalog_items_name_normalized",
+      "def": "CREATE INDEX ix_catalog_items_name_normalized ON public.catalog_items USING btree (lower(btrim(name)))"
+    },
+    {
+      "table": "catalog_items",
+      "name": "ix_catalog_items_proposed_by",
+      "def": "CREATE INDEX ix_catalog_items_proposed_by ON public.catalog_items USING btree (proposed_by_user_id, status)"
+    },
+    {
+      "table": "catalog_items",
+      "name": "ix_catalog_items_status",
+      "def": "CREATE INDEX ix_catalog_items_status ON public.catalog_items USING btree (status)"
+    },
+    {
+      "table": "categories",
+      "name": "categories_pkey",
+      "def": "CREATE UNIQUE INDEX categories_pkey ON public.categories USING btree (id)"
+    },
+    {
+      "table": "categories",
+      "name": "uq_categories_name_normalized",
+      "def": "CREATE UNIQUE INDEX uq_categories_name_normalized ON public.categories USING btree (lower(btrim(name)))"
+    },
+    {
+      "table": "companies",
+      "name": "companies_pkey",
+      "def": "CREATE UNIQUE INDEX companies_pkey ON public.companies USING btree (id)"
+    },
+    {
+      "table": "companies",
+      "name": "uq_companies_name_normalized",
+      "def": "CREATE UNIQUE INDEX uq_companies_name_normalized ON public.companies USING btree (lower(btrim(name)))"
+    },
+    {
+      "table": "customer_contacts",
+      "name": "customer_contacts_pkey",
+      "def": "CREATE UNIQUE INDEX customer_contacts_pkey ON public.customer_contacts USING btree (id)"
+    },
+    {
+      "table": "customer_contacts",
+      "name": "ix_customer_contacts_customer_id",
+      "def": "CREATE INDEX ix_customer_contacts_customer_id ON public.customer_contacts USING btree (customer_id)"
+    },
+    {
+      "table": "customer_contacts",
+      "name": "uq_customer_contacts_primary",
+      "def": "CREATE UNIQUE INDEX uq_customer_contacts_primary ON public.customer_contacts USING btree (customer_id) WHERE is_primary"
+    },
+    {
+      "table": "customers",
+      "name": "customers_pkey",
+      "def": "CREATE UNIQUE INDEX customers_pkey ON public.customers USING btree (id)"
+    },
+    {
+      "table": "customers",
+      "name": "ix_customers_email_normalized",
+      "def": "CREATE INDEX ix_customers_email_normalized ON public.customers USING btree (lower(btrim(email)))"
+    },
+    {
+      "table": "customers",
+      "name": "ix_customers_identification",
+      "def": "CREATE INDEX ix_customers_identification ON public.customers USING btree (identification_type, identification_number) WHERE (identification_number IS NOT NULL)"
+    },
+    {
+      "table": "customers",
+      "name": "ix_customers_owner_status",
+      "def": "CREATE INDEX ix_customers_owner_status ON public.customers USING btree (owner_user_id, status)"
+    },
+    {
+      "table": "email_change_requests",
+      "name": "email_change_requests_pkey",
+      "def": "CREATE UNIQUE INDEX email_change_requests_pkey ON public.email_change_requests USING btree (id)"
+    },
+    {
+      "table": "email_change_requests",
+      "name": "ix_email_change_expires_at",
+      "def": "CREATE INDEX ix_email_change_expires_at ON public.email_change_requests USING btree (expires_at)"
+    },
+    {
+      "table": "email_change_requests",
+      "name": "uq_email_change_live_user",
+      "def": "CREATE UNIQUE INDEX uq_email_change_live_user ON public.email_change_requests USING btree (user_id) WHERE (used_at IS NULL)"
+    },
+    {
+      "table": "email_change_requests",
+      "name": "uq_email_change_token_hash",
+      "def": "CREATE UNIQUE INDEX uq_email_change_token_hash ON public.email_change_requests USING btree (token_hash)"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "exchange_rates_pkey",
+      "def": "CREATE UNIQUE INDEX exchange_rates_pkey ON public.exchange_rates USING btree (id)"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "ix_exchange_rates_created_by",
+      "def": "CREATE INDEX ix_exchange_rates_created_by ON public.exchange_rates USING btree (created_by_user_id) WHERE (created_by_user_id IS NOT NULL)"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "ix_exchange_rates_date_created",
+      "def": "CREATE INDEX ix_exchange_rates_date_created ON public.exchange_rates USING btree (rate_date DESC NULLS LAST, created_at DESC NULLS LAST)"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "uq_exchange_rates_id_rate_date",
+      "def": "CREATE UNIQUE INDEX uq_exchange_rates_id_rate_date ON public.exchange_rates USING btree (id, rate_date)"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "uq_exchange_rates_root_per_date",
+      "def": "CREATE UNIQUE INDEX uq_exchange_rates_root_per_date ON public.exchange_rates USING btree (rate_date) WHERE (supersedes_id IS NULL)"
+    },
+    {
+      "table": "exchange_rates",
+      "name": "uq_exchange_rates_supersedes_id",
+      "def": "CREATE UNIQUE INDEX uq_exchange_rates_supersedes_id ON public.exchange_rates USING btree (supersedes_id)"
+    },
+    {
+      "table": "generated_documents",
+      "name": "generated_documents_pkey",
+      "def": "CREATE UNIQUE INDEX generated_documents_pkey ON public.generated_documents USING btree (id)"
+    },
+    {
+      "table": "generated_documents",
+      "name": "ix_generated_documents_quotation_revision",
+      "def": "CREATE INDEX ix_generated_documents_quotation_revision ON public.generated_documents USING btree (quotation_id, revision_id)"
+    },
+    {
+      "table": "generated_documents",
+      "name": "uq_generated_documents_sha_revision",
+      "def": "CREATE UNIQUE INDEX uq_generated_documents_sha_revision ON public.generated_documents USING btree (revision_id, kind, sha256)"
+    },
+    {
+      "table": "generated_documents",
+      "name": "uq_generated_documents_storage",
+      "def": "CREATE UNIQUE INDEX uq_generated_documents_storage ON public.generated_documents USING btree (storage_provider, COALESCE(storage_bucket, ''::text), storage_key)"
+    },
+    {
+      "table": "passkeys",
+      "name": "ix_passkeys_user_id",
+      "def": "CREATE INDEX ix_passkeys_user_id ON public.passkeys USING btree (user_id)"
+    },
+    {
+      "table": "passkeys",
+      "name": "passkeys_pkey",
+      "def": "CREATE UNIQUE INDEX passkeys_pkey ON public.passkeys USING btree (id)"
+    },
+    {
+      "table": "passkeys",
+      "name": "uq_passkeys_credential_id",
+      "def": "CREATE UNIQUE INDEX uq_passkeys_credential_id ON public.passkeys USING btree (credential_id)"
+    },
+    {
+      "table": "payment_accounts",
+      "name": "payment_accounts_pkey",
+      "def": "CREATE UNIQUE INDEX payment_accounts_pkey ON public.payment_accounts USING btree (id)"
+    },
+    {
+      "table": "permissions",
+      "name": "permissions_pkey",
+      "def": "CREATE UNIQUE INDEX permissions_pkey ON public.permissions USING btree (id)"
+    },
+    {
+      "table": "permissions",
+      "name": "uq_permissions_code",
+      "def": "CREATE UNIQUE INDEX uq_permissions_code ON public.permissions USING btree (code)"
+    },
+    {
+      "table": "provider_costs",
+      "name": "ix_provider_costs_owner_item",
+      "def": "CREATE INDEX ix_provider_costs_owner_item ON public.provider_costs USING btree (created_by_user_id, catalog_item_id, quoted_on DESC NULLS LAST)"
+    },
+    {
+      "table": "provider_costs",
+      "name": "ix_provider_costs_provider",
+      "def": "CREATE INDEX ix_provider_costs_provider ON public.provider_costs USING btree (provider_id)"
+    },
+    {
+      "table": "provider_costs",
+      "name": "provider_costs_pkey",
+      "def": "CREATE UNIQUE INDEX provider_costs_pkey ON public.provider_costs USING btree (id)"
+    },
+    {
+      "table": "providers",
+      "name": "ix_providers_identification",
+      "def": "CREATE INDEX ix_providers_identification ON public.providers USING btree (identification_type, identification_number) WHERE (identification_number IS NOT NULL)"
+    },
+    {
+      "table": "providers",
+      "name": "ix_providers_legal_name_normalized",
+      "def": "CREATE INDEX ix_providers_legal_name_normalized ON public.providers USING btree (lower(btrim(legal_name)))"
+    },
+    {
+      "table": "providers",
+      "name": "ix_providers_merged_into",
+      "def": "CREATE INDEX ix_providers_merged_into ON public.providers USING btree (merged_into_id) WHERE (merged_into_id IS NOT NULL)"
+    },
+    {
+      "table": "providers",
+      "name": "ix_providers_proposed_by",
+      "def": "CREATE INDEX ix_providers_proposed_by ON public.providers USING btree (proposed_by_user_id, status)"
+    },
+    {
+      "table": "providers",
+      "name": "ix_providers_status",
+      "def": "CREATE INDEX ix_providers_status ON public.providers USING btree (status)"
+    },
+    {
+      "table": "providers",
+      "name": "providers_pkey",
+      "def": "CREATE UNIQUE INDEX providers_pkey ON public.providers USING btree (id)"
+    },
+    {
+      "table": "providers",
+      "name": "uq_providers_identification",
+      "def": "CREATE UNIQUE INDEX uq_providers_identification ON public.providers USING btree (identification_type, identification_number) WHERE ((identification_number IS NOT NULL) AND (status = 'APPROVED'::catalog_review_status))"
+    },
+    {
+      "table": "quotation_folio_counters",
+      "name": "quotation_folio_counters_pkey",
+      "def": "CREATE UNIQUE INDEX quotation_folio_counters_pkey ON public.quotation_folio_counters USING btree (folio_year)"
+    },
+    {
+      "table": "quotation_items",
+      "name": "ix_quotation_items_catalog_item_id",
+      "def": "CREATE INDEX ix_quotation_items_catalog_item_id ON public.quotation_items USING btree (catalog_item_id) WHERE (catalog_item_id IS NOT NULL)"
+    },
+    {
+      "table": "quotation_items",
+      "name": "ix_quotation_items_provider_id",
+      "def": "CREATE INDEX ix_quotation_items_provider_id ON public.quotation_items USING btree (provider_id) WHERE (provider_id IS NOT NULL)"
+    },
+    {
+      "table": "quotation_items",
+      "name": "ix_quotation_items_quotation_revision",
+      "def": "CREATE INDEX ix_quotation_items_quotation_revision ON public.quotation_items USING btree (quotation_id, revision_id)"
+    },
+    {
+      "table": "quotation_items",
+      "name": "quotation_items_pkey",
+      "def": "CREATE UNIQUE INDEX quotation_items_pkey ON public.quotation_items USING btree (id)"
+    },
+    {
+      "table": "quotation_items",
+      "name": "uq_quotation_items_revision_line",
+      "def": "CREATE UNIQUE INDEX uq_quotation_items_revision_line ON public.quotation_items USING btree (revision_id, line_number)"
+    },
+    {
+      "table": "quotation_reviews",
+      "name": "ix_quotation_reviews_quotation_reviewed",
+      "def": "CREATE INDEX ix_quotation_reviews_quotation_reviewed ON public.quotation_reviews USING btree (quotation_id, reviewed_at)"
+    },
+    {
+      "table": "quotation_reviews",
+      "name": "ix_quotation_reviews_reviewer_reviewed",
+      "def": "CREATE INDEX ix_quotation_reviews_reviewer_reviewed ON public.quotation_reviews USING btree (reviewer_user_id, reviewed_at)"
+    },
+    {
+      "table": "quotation_reviews",
+      "name": "quotation_reviews_pkey",
+      "def": "CREATE UNIQUE INDEX quotation_reviews_pkey ON public.quotation_reviews USING btree (id)"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "ix_quotation_revisions_exchange_rate_id",
+      "def": "CREATE INDEX ix_quotation_revisions_exchange_rate_id ON public.quotation_revisions USING btree (exchange_rate_id) WHERE (exchange_rate_id IS NOT NULL)"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "quotation_revisions_pkey",
+      "def": "CREATE UNIQUE INDEX quotation_revisions_pkey ON public.quotation_revisions USING btree (id)"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "uq_quotation_revisions_number",
+      "def": "CREATE UNIQUE INDEX uq_quotation_revisions_number ON public.quotation_revisions USING btree (quotation_id, revision_number)"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "uq_quotation_revisions_one_draft",
+      "def": "CREATE UNIQUE INDEX uq_quotation_revisions_one_draft ON public.quotation_revisions USING btree (quotation_id) WHERE (state = 'DRAFT'::quotation_revision_state)"
+    },
+    {
+      "table": "quotation_revisions",
+      "name": "uq_quotation_revisions_quotation_id_id",
+      "def": "CREATE UNIQUE INDEX uq_quotation_revisions_quotation_id_id ON public.quotation_revisions USING btree (quotation_id, id)"
+    },
+    {
+      "table": "quotation_status_history",
+      "name": "ix_quotation_status_history_quotation_changed",
+      "def": "CREATE INDEX ix_quotation_status_history_quotation_changed ON public.quotation_status_history USING btree (quotation_id, changed_at)"
+    },
+    {
+      "table": "quotation_status_history",
+      "name": "ix_quotation_status_history_to_changed",
+      "def": "CREATE INDEX ix_quotation_status_history_to_changed ON public.quotation_status_history USING btree (to_status, changed_at)"
+    },
+    {
+      "table": "quotation_status_history",
+      "name": "quotation_status_history_pkey",
+      "def": "CREATE UNIQUE INDEX quotation_status_history_pkey ON public.quotation_status_history USING btree (id)"
+    },
+    {
+      "table": "quotation_status_history",
+      "name": "uq_quotation_status_history_seq",
+      "def": "CREATE UNIQUE INDEX uq_quotation_status_history_seq ON public.quotation_status_history USING btree (seq)"
+    },
+    {
+      "table": "quotations",
+      "name": "ix_quotations_customer_id",
+      "def": "CREATE INDEX ix_quotations_customer_id ON public.quotations USING btree (customer_id)"
+    },
+    {
+      "table": "quotations",
+      "name": "ix_quotations_owner_status",
+      "def": "CREATE INDEX ix_quotations_owner_status ON public.quotations USING btree (owner_user_id, status)"
+    },
+    {
+      "table": "quotations",
+      "name": "ix_quotations_status_updated",
+      "def": "CREATE INDEX ix_quotations_status_updated ON public.quotations USING btree (status, updated_at DESC NULLS LAST)"
+    },
+    {
+      "table": "quotations",
+      "name": "quotations_pkey",
+      "def": "CREATE UNIQUE INDEX quotations_pkey ON public.quotations USING btree (id)"
+    },
+    {
+      "table": "quotations",
+      "name": "uq_quotations_folio",
+      "def": "CREATE UNIQUE INDEX uq_quotations_folio ON public.quotations USING btree (folio_year, folio_number)"
+    },
+    {
+      "table": "rate_limits",
+      "name": "rate_limits_pkey",
+      "def": "CREATE UNIQUE INDEX rate_limits_pkey ON public.rate_limits USING btree (id)"
+    },
+    {
+      "table": "rate_limits",
+      "name": "uq_rate_limits_key",
+      "def": "CREATE UNIQUE INDEX uq_rate_limits_key ON public.rate_limits USING btree (key)"
+    },
+    {
+      "table": "role_permissions",
+      "name": "ix_role_permissions_permission_id",
+      "def": "CREATE INDEX ix_role_permissions_permission_id ON public.role_permissions USING btree (permission_id)"
+    },
+    {
+      "table": "role_permissions",
+      "name": "pk_role_permissions",
+      "def": "CREATE UNIQUE INDEX pk_role_permissions ON public.role_permissions USING btree (role_id, permission_id)"
+    },
+    {
+      "table": "roles",
+      "name": "roles_pkey",
+      "def": "CREATE UNIQUE INDEX roles_pkey ON public.roles USING btree (id)"
+    },
+    {
+      "table": "roles",
+      "name": "uq_roles_code",
+      "def": "CREATE UNIQUE INDEX uq_roles_code ON public.roles USING btree (code)"
+    },
+    {
+      "table": "sessions",
+      "name": "ix_sessions_expires_at",
+      "def": "CREATE INDEX ix_sessions_expires_at ON public.sessions USING btree (expires_at)"
+    },
+    {
+      "table": "sessions",
+      "name": "ix_sessions_user_id",
+      "def": "CREATE INDEX ix_sessions_user_id ON public.sessions USING btree (user_id)"
+    },
+    {
+      "table": "sessions",
+      "name": "sessions_pkey",
+      "def": "CREATE UNIQUE INDEX sessions_pkey ON public.sessions USING btree (id)"
+    },
+    {
+      "table": "sessions",
+      "name": "uq_sessions_token",
+      "def": "CREATE UNIQUE INDEX uq_sessions_token ON public.sessions USING btree (token)"
+    },
+    {
+      "table": "system_settings",
+      "name": "system_settings_pkey",
+      "def": "CREATE UNIQUE INDEX system_settings_pkey ON public.system_settings USING btree (id)"
+    },
+    {
+      "table": "two_factors",
+      "name": "ix_two_factors_secret",
+      "def": "CREATE INDEX ix_two_factors_secret ON public.two_factors USING btree (secret)"
+    },
+    {
+      "table": "two_factors",
+      "name": "two_factors_pkey",
+      "def": "CREATE UNIQUE INDEX two_factors_pkey ON public.two_factors USING btree (id)"
+    },
+    {
+      "table": "two_factors",
+      "name": "uq_two_factors_user_id",
+      "def": "CREATE UNIQUE INDEX uq_two_factors_user_id ON public.two_factors USING btree (user_id)"
+    },
+    {
+      "table": "users",
+      "name": "ix_users_company_id",
+      "def": "CREATE INDEX ix_users_company_id ON public.users USING btree (company_id) WHERE (company_id IS NOT NULL)"
+    },
+    {
+      "table": "users",
+      "name": "ix_users_role_id",
+      "def": "CREATE INDEX ix_users_role_id ON public.users USING btree (role_id)"
+    },
+    {
+      "table": "users",
+      "name": "ix_users_status_pending",
+      "def": "CREATE INDEX ix_users_status_pending ON public.users USING btree (status) WHERE (status = 'PENDING_ACTIVATION'::user_status)"
+    },
+    {
+      "table": "users",
+      "name": "uq_users_email",
+      "def": "CREATE UNIQUE INDEX uq_users_email ON public.users USING btree (email)"
+    },
+    {
+      "table": "users",
+      "name": "users_pkey",
+      "def": "CREATE UNIQUE INDEX users_pkey ON public.users USING btree (id)"
+    },
+    {
+      "table": "verifications",
+      "name": "ix_verifications_expires_at",
+      "def": "CREATE INDEX ix_verifications_expires_at ON public.verifications USING btree (expires_at)"
+    },
+    {
+      "table": "verifications",
+      "name": "ix_verifications_identifier",
+      "def": "CREATE INDEX ix_verifications_identifier ON public.verifications USING btree (identifier)"
+    },
+    {
+      "table": "verifications",
+      "name": "verifications_pkey",
+      "def": "CREATE UNIQUE INDEX verifications_pkey ON public.verifications USING btree (id)"
+    }
+  ],
+  "functions": [
+    {
+      "name": "claim_quotation_revision",
+      "args": "p_revision_id uuid, p_expected_version integer",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "1ae94ef2b2e839cd804bf3d27f1012b2"
+    },
+    {
+      "name": "fn_check_merge",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "123a9e045daacb1b459108b5b037a73e"
+    },
+    {
+      "name": "fn_check_owner_eligible",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "e54343cef26557aff43ebd9dbd96aa4a"
+    },
+    {
+      "name": "fn_customers_deferred_check",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "705e5c85b27e4d1996b11f49f3ccfca8"
+    },
+    {
+      "name": "fn_exchange_rates_guard",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "24b052c4c9c1cb2cf2c631cc66d7db25"
+    },
+    {
+      "name": "fn_folio_counter_guard",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "55e0da77d85a4c2d76a6580d0a008242"
+    },
+    {
+      "name": "fn_generated_documents_guard",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "714613635a8925a0923e9e33e50d87d1"
+    },
+    {
+      "name": "fn_is_owner_context",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "s",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "7c79d637dbdc134a8b5d034aac46d5a4"
+    },
+    {
+      "name": "fn_jsonb_has_forbidden_keys",
+      "args": "p jsonb",
+      "securityDefiner": false,
+      "volatility": "i",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "dc5f70bd1ad17669e13b42c959d67c59"
+    },
+    {
+      "name": "fn_preserve_last_active_admin",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "c7b533331cf0071424117ccd1bcd830d"
+    },
+    {
+      "name": "fn_prevent_mutation",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "5c7cb28b02221301b34c33cd99335fc8"
+    },
+    {
+      "name": "fn_protect_created_by",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "d9340b2156f78f2b7870156da8200315"
+    },
+    {
+      "name": "fn_quotation_items_guard",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "b93bc5748718bae50d7b8b3ed42cad23"
+    },
+    {
+      "name": "fn_quotation_reviews_guard",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "fd919117d7c3fcba61e4dbdd4972600e"
+    },
+    {
+      "name": "fn_quotation_revisions_guard",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "778af4a37a91cef0952cfeb2915198bf"
+    },
+    {
+      "name": "fn_quotation_status_history_guard",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "aa13cf84daa26c6d1c3ff70f01ee8471"
+    },
+    {
+      "name": "fn_quotations_deferred_check",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "1a112e2b4113290db84753a1ee9280cd"
+    },
+    {
+      "name": "fn_quotations_guard",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "90b75d1517fa7edc0fef522ffa077d3d"
+    },
+    {
+      "name": "fn_revisions_deferred_check",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "c840113b3570947fcc715b32e1b5586d"
+    },
+    {
+      "name": "fn_seller_requires_company",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "1d3c9f4e898b7f8a550c5b3af524956c"
+    },
+    {
+      "name": "fn_touch_version",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "f79cd39de67a1209520467f08ec2425a"
+    },
+    {
+      "name": "fn_users_guard",
+      "args": "",
+      "securityDefiner": false,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "e8c20f5aa8fb3de3d7159dbba03b52dc"
+    },
+    {
+      "name": "issue_quotation_revision",
+      "args": "p_quotation_id uuid, p_revision_id uuid, p_expected_quotation_version integer, p_expected_revision_version integer, p_actor_user_id uuid",
+      "securityDefiner": true,
+      "volatility": "v",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "bodyMd5": "898f5bc99377b14f8e212b93e037bedc"
+    }
+  ],
+  "views": [
+    {
+      "name": "catalog_items_public",
+      "def": " SELECT catalog_items.id,\n    catalog_items.name,\n    catalog_items.description,\n    catalog_items.category_id,\n    catalog_items.cabys_code,\n    catalog_items.unit\n   FROM catalog_items\n  WHERE (catalog_items.status = 'APPROVED'::catalog_review_status);"
+    },
+    {
+      "name": "providers_public",
+      "def": " SELECT providers.id,\n    providers.legal_name,\n    providers.commercial_name,\n    providers.identification_type,\n    providers.identification_number,\n    providers.phone,\n    providers.email,\n    providers.address,\n    providers.contact_name\n   FROM providers\n  WHERE (providers.status = 'APPROVED'::catalog_review_status);"
+    }
+  ]
+}

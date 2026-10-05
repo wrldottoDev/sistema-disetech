@@ -1,0 +1,3 @@
+import { ActionForm } from "@/components/action-form";
+import { activateAction } from "@/app/actions/users";
+export default async function ActivatePage({ searchParams }: { searchParams: Promise<{ token?: string }> }) { const { token = "" } = await searchParams; return <><h1>Activa tu cuenta</h1><p>Crea una contraseña de al menos 12 caracteres.</p><ActionForm action={activateAction} submitLabel="Activar cuenta"><input type="hidden" name="token" value={token} /><label>Nueva contraseña<input name="password" type="password" minLength={12} autoComplete="new-password" required /></label></ActionForm><a href="/login">Volver al ingreso</a></>; }

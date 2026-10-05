@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local scratch tooling (excluded from git) and generated documents.
+    ".orchestration/**",
+    "storage/**",
+    "storage-test/**",
   ]),
 ]);
 

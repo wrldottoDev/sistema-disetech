@@ -1,0 +1,3483 @@
+{
+  "id": "6b6a21e7-a561-4381-9741-8897e427b81c",
+  "prevId": "13abe79b-c24a-4faf-8437-1eb8fcb3c3b7",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.permissions": {
+      "name": "permissions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "uq_permissions_code": {
+          "name": "uq_permissions_code",
+          "columns": [
+            "code"
+          ],
+          "nullsNotDistinct": false
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "ck_permissions_code_format": {
+          "name": "ck_permissions_code_format",
+          "value": "\"permissions\".\"code\" ~ '^[a-z][a-z0-9]*(_[a-z0-9]+)*[.][a-z][a-z0-9]*(_[a-z0-9]+)*$'"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.role_permissions": {
+      "name": "role_permissions",
+      "schema": "",
+      "columns": {
+        "role_id": {
+          "name": "role_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "permission_id": {
+          "name": "permission_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "ix_role_permissions_permission_id": {
+          "name": "ix_role_permissions_permission_id",
+          "columns": [
+            {
+              "expression": "permission_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "fk_role_permissions_role_id": {
+          "name": "fk_role_permissions_role_id",
+          "tableFrom": "role_permissions",
+          "columnsFrom": [
+            "role_id"
+          ],
+          "tableTo": "roles",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_role_permissions_permission_id": {
+          "name": "fk_role_permissions_permission_id",
+          "tableFrom": "role_permissions",
+          "columnsFrom": [
+            "permission_id"
+          ],
+          "tableTo": "permissions",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {
+        "pk_role_permissions": {
+          "name": "pk_role_permissions",
+          "columns": [
+            "role_id",
+            "permission_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.roles": {
+      "name": "roles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "code": {
+          "name": "code",
+          "type": "role_code",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "uq_roles_code": {
+          "name": "uq_roles_code",
+          "columns": [
+            "code"
+          ],
+          "nullsNotDistinct": false
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "full_name": {
+          "name": "full_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email_verified": {
+          "name": "email_verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone": {
+          "name": "phone",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role_id": {
+          "name": "role_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "user_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'PENDING_ACTIVATION'"
+        },
+        "activated_at": {
+          "name": "activated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deactivated_at": {
+          "name": "deactivated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        }
+      },
+      "indexes": {
+        "ix_users_role_id": {
+          "name": "ix_users_role_id",
+          "columns": [
+            {
+              "expression": "role_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ix_users_status_pending": {
+          "name": "ix_users_status_pending",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "where": "\"users\".\"status\" = 'PENDING_ACTIVATION'",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "fk_users_role_id": {
+          "name": "fk_users_role_id",
+          "tableFrom": "users",
+          "columnsFrom": [
+            "role_id"
+          ],
+          "tableTo": "roles",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "uq_users_email": {
+          "name": "uq_users_email",
+          "columns": [
+            "email"
+          ],
+          "nullsNotDistinct": false
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "ck_users_email_normalized": {
+          "name": "ck_users_email_normalized",
+          "value": "\"users\".\"email\" = lower(btrim(\"users\".\"email\"))"
+        },
+        "ck_users_status_coherence": {
+          "name": "ck_users_status_coherence",
+          "value": "(\"users\".\"status\" = 'PENDING_ACTIVATION' AND \"users\".\"activated_at\" IS NULL AND \"users\".\"deactivated_at\" IS NULL)\n        OR (\"users\".\"status\" = 'ACTIVE' AND \"users\".\"activated_at\" IS NOT NULL AND \"users\".\"deactivated_at\" IS NULL)\n        OR (\"users\".\"status\" = 'INACTIVE' AND \"users\".\"deactivated_at\" IS NOT NULL\n            AND (\"users\".\"activated_at\" IS NULL OR \"users\".\"deactivated_at\" >= \"users\".\"activated_at\"))"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.catalog_items": {
+      "name": "catalog_items",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cabys_code": {
+          "name": "cabys_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "unit": {
+          "name": "unit",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "catalog_review_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'PENDING_REVIEW'"
+        },
+        "merged_into_id": {
+          "name": "merged_into_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "proposed_by_user_id": {
+          "name": "proposed_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reviewed_by_user_id": {
+          "name": "reviewed_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reviewed_at": {
+          "name": "reviewed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "ix_catalog_items_name_normalized": {
+          "name": "ix_catalog_items_name_normalized",
+          "columns": [
+            {
+              "expression": "lower(btrim(\"name\"))",
+              "isExpression": true,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ix_catalog_items_status": {
+          "name": "ix_catalog_items_status",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ix_catalog_items_category_id": {
+          "name": "ix_catalog_items_category_id",
+          "columns": [
+            {
+              "expression": "category_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ix_catalog_items_proposed_by": {
+          "name": "ix_catalog_items_proposed_by",
+          "columns": [
+            {
+              "expression": "proposed_by_user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ix_catalog_items_merged_into": {
+          "name": "ix_catalog_items_merged_into",
+          "columns": [
+            {
+              "expression": "merged_into_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "where": "\"catalog_items\".\"merged_into_id\" IS NOT NULL",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "fk_catalog_items_category_id": {
+          "name": "fk_catalog_items_category_id",
+          "tableFrom": "catalog_items",
+          "columnsFrom": [
+            "category_id"
+          ],
+          "tableTo": "categories",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_catalog_items_merged_into_id": {
+          "name": "fk_catalog_items_merged_into_id",
+          "tableFrom": "catalog_items",
+          "columnsFrom": [
+            "merged_into_id"
+          ],
+          "tableTo": "catalog_items",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_catalog_items_proposed_by_user_id": {
+          "name": "fk_catalog_items_proposed_by_user_id",
+          "tableFrom": "catalog_items",
+          "columnsFrom": [
+            "proposed_by_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_catalog_items_reviewed_by_user_id": {
+          "name": "fk_catalog_items_reviewed_by_user_id",
+          "tableFrom": "catalog_items",
+          "columnsFrom": [
+            "reviewed_by_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "ck_catalog_items_no_self_merge": {
+          "name": "ck_catalog_items_no_self_merge",
+          "value": "\"catalog_items\".\"merged_into_id\" IS NULL OR \"catalog_items\".\"merged_into_id\" <> \"catalog_items\".\"id\""
+        },
+        "ck_catalog_items_merge_coherence": {
+          "name": "ck_catalog_items_merge_coherence",
+          "value": "(\"catalog_items\".\"status\" = 'MERGED' AND \"catalog_items\".\"merged_into_id\" IS NOT NULL)\n        OR (\"catalog_items\".\"status\" <> 'MERGED' AND \"catalog_items\".\"merged_into_id\" IS NULL)"
+        },
+        "ck_catalog_items_review_coherence": {
+          "name": "ck_catalog_items_review_coherence",
+          "value": "(\"catalog_items\".\"status\" = 'PENDING_REVIEW' AND \"catalog_items\".\"reviewed_by_user_id\" IS NULL AND \"catalog_items\".\"reviewed_at\" IS NULL)\n        OR (\"catalog_items\".\"status\" <> 'PENDING_REVIEW' AND \"catalog_items\".\"reviewed_by_user_id\" IS NOT NULL AND \"catalog_items\".\"reviewed_at\" IS NOT NULL)"
+        },
+        "ck_catalog_items_cabys_format": {
+          "name": "ck_catalog_items_cabys_format",
+          "value": "\"catalog_items\".\"cabys_code\" IS NULL OR \"catalog_items\".\"cabys_code\" ~ '^[0-9]{13}$'"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.categories": {
+      "name": "categories",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "uq_categories_name_normalized": {
+          "name": "uq_categories_name_normalized",
+          "columns": [
+            {
+              "expression": "lower(btrim(\"name\"))",
+              "isExpression": true,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.customer_contacts": {
+      "name": "customer_contacts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "customer_id": {
+          "name": "customer_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "full_name": {
+          "name": "full_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "department": {
+          "name": "department",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone": {
+          "name": "phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "extension": {
+          "name": "extension",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_primary": {
+          "name": "is_primary",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "ix_customer_contacts_customer_id": {
+          "name": "ix_customer_contacts_customer_id",
+          "columns": [
+            {
+              "expression": "customer_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "uq_customer_contacts_primary": {
+          "name": "uq_customer_contacts_primary",
+          "columns": [
+            {
+              "expression": "customer_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "where": "\"customer_contacts\".\"is_primary\"",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "fk_customer_contacts_customer_id": {
+          "name": "fk_customer_contacts_customer_id",
+          "tableFrom": "customer_contacts",
+          "columnsFrom": [
+            "customer_id"
+          ],
+          "tableTo": "customers",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.customers": {
+      "name": "customers",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "full_name": {
+          "name": "full_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "identification_type": {
+          "name": "identification_type",
+          "type": "identification_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "identification_number": {
+          "name": "identification_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone": {
+          "name": "phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "economic_activity_cabys": {
+          "name": "economic_activity_cabys",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address": {
+          "name": "address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_by_user_id": {
+          "name": "created_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "owner_user_id": {
+          "name": "owner_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "customer_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'ACTIVE'"
+        },
+        "deactivated_at": {
+          "name": "deactivated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deactivated_by_user_id": {
+          "name": "deactivated_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "ix_customers_owner_status": {
+          "name": "ix_customers_owner_status",
+          "columns": [
+            {
+              "expression": "owner_user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ix_customers_email_normalized": {
+          "name": "ix_customers_email_normalized",
+          "columns": [
+            {
+              "expression": "lower(btrim(\"email\"))",
+              "isExpression": true,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ix_customers_identification": {
+          "name": "ix_customers_identification",
+          "columns": [
+            {
+              "expression": "identification_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "identification_number",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "where": "\"customers\".\"identification_number\" IS NOT NULL",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "fk_customers_created_by_user_id": {
+          "name": "fk_customers_created_by_user_id",
+          "tableFrom": "customers",
+          "columnsFrom": [
+            "created_by_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_customers_owner_user_id": {
+          "name": "fk_customers_owner_user_id",
+          "tableFrom": "customers",
+          "columnsFrom": [
+            "owner_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_customers_deactivated_by_user_id": {
+          "name": "fk_customers_deactivated_by_user_id",
+          "tableFrom": "customers",
+          "columnsFrom": [
+            "deactivated_by_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "ck_customers_identification_both_or_neither": {
+          "name": "ck_customers_identification_both_or_neither",
+          "value": "(\"customers\".\"identification_type\" IS NULL) = (\"customers\".\"identification_number\" IS NULL)"
+        },
+        "ck_customers_identification_format": {
+          "name": "ck_customers_identification_format",
+          "value": "(\"customers\".\"identification_type\" IS DISTINCT FROM 'FISICA'    OR \"customers\".\"identification_number\" ~ '^[0-9]{9}$')\n        AND (\"customers\".\"identification_type\" IS DISTINCT FROM 'JURIDICA'  OR \"customers\".\"identification_number\" ~ '^[0-9]{10}$')\n        AND (\"customers\".\"identification_type\" IS DISTINCT FROM 'DIMEX'     OR \"customers\".\"identification_number\" ~ '^[0-9]{11,12}$')\n        AND (\"customers\".\"identification_type\" IS DISTINCT FROM 'NITE'      OR \"customers\".\"identification_number\" ~ '^[0-9]{9,10}$')\n        AND (\"customers\".\"identification_type\" IS DISTINCT FROM 'PASAPORTE' OR length(\"customers\".\"identification_number\") BETWEEN 3 AND 20)"
+        },
+        "ck_customers_email_normalized": {
+          "name": "ck_customers_email_normalized",
+          "value": "\"customers\".\"email\" = lower(btrim(\"customers\".\"email\"))"
+        },
+        "ck_customers_cabys_format": {
+          "name": "ck_customers_cabys_format",
+          "value": "\"customers\".\"economic_activity_cabys\" IS NULL OR \"customers\".\"economic_activity_cabys\" ~ '^[0-9]{13}$'"
+        },
+        "ck_customers_status_coherence": {
+          "name": "ck_customers_status_coherence",
+          "value": "(\"customers\".\"status\" = 'ACTIVE' AND \"customers\".\"deactivated_at\" IS NULL AND \"customers\".\"deactivated_by_user_id\" IS NULL)\n        OR (\"customers\".\"status\" = 'INACTIVE' AND \"customers\".\"deactivated_at\" IS NOT NULL AND \"customers\".\"deactivated_by_user_id\" IS NOT NULL)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.providers": {
+      "name": "providers",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "legal_name": {
+          "name": "legal_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "commercial_name": {
+          "name": "commercial_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "identification_type": {
+          "name": "identification_type",
+          "type": "identification_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "identification_number": {
+          "name": "identification_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone": {
+          "name": "phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address": {
+          "name": "address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contact_name": {
+          "name": "contact_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "catalog_review_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'PENDING_REVIEW'"
+        },
+        "merged_into_id": {
+          "name": "merged_into_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "proposed_by_user_id": {
+          "name": "proposed_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reviewed_by_user_id": {
+          "name": "reviewed_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reviewed_at": {
+          "name": "reviewed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "ix_providers_legal_name_normalized": {
+          "name": "ix_providers_legal_name_normalized",
+          "columns": [
+            {
+              "expression": "lower(btrim(\"legal_name\"))",
+              "isExpression": true,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ix_providers_status": {
+          "name": "ix_providers_status",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ix_providers_proposed_by": {
+          "name": "ix_providers_proposed_by",
+          "columns": [
+            {
+              "expression": "proposed_by_user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ix_providers_identification": {
+          "name": "ix_providers_identification",
+          "columns": [
+            {
+              "expression": "identification_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "identification_number",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "where": "\"providers\".\"identification_number\" IS NOT NULL",
+          "concurrently": false
+        },
+        "ix_providers_merged_into": {
+          "name": "ix_providers_merged_into",
+          "columns": [
+            {
+              "expression": "merged_into_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "where": "\"providers\".\"merged_into_id\" IS NOT NULL",
+          "concurrently": false
+        },
+        "uq_providers_identification": {
+          "name": "uq_providers_identification",
+          "columns": [
+            {
+              "expression": "identification_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "identification_number",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "where": "\"providers\".\"identification_number\" IS NOT NULL AND \"providers\".\"status\" = 'APPROVED'",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "fk_providers_merged_into_id": {
+          "name": "fk_providers_merged_into_id",
+          "tableFrom": "providers",
+          "columnsFrom": [
+            "merged_into_id"
+          ],
+          "tableTo": "providers",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_providers_proposed_by_user_id": {
+          "name": "fk_providers_proposed_by_user_id",
+          "tableFrom": "providers",
+          "columnsFrom": [
+            "proposed_by_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_providers_reviewed_by_user_id": {
+          "name": "fk_providers_reviewed_by_user_id",
+          "tableFrom": "providers",
+          "columnsFrom": [
+            "reviewed_by_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "ck_providers_no_self_merge": {
+          "name": "ck_providers_no_self_merge",
+          "value": "\"providers\".\"merged_into_id\" IS NULL OR \"providers\".\"merged_into_id\" <> \"providers\".\"id\""
+        },
+        "ck_providers_merge_coherence": {
+          "name": "ck_providers_merge_coherence",
+          "value": "(\"providers\".\"status\" = 'MERGED' AND \"providers\".\"merged_into_id\" IS NOT NULL)\n        OR (\"providers\".\"status\" <> 'MERGED' AND \"providers\".\"merged_into_id\" IS NULL)"
+        },
+        "ck_providers_review_coherence": {
+          "name": "ck_providers_review_coherence",
+          "value": "(\"providers\".\"status\" = 'PENDING_REVIEW' AND \"providers\".\"reviewed_by_user_id\" IS NULL AND \"providers\".\"reviewed_at\" IS NULL)\n        OR (\"providers\".\"status\" <> 'PENDING_REVIEW' AND \"providers\".\"reviewed_by_user_id\" IS NOT NULL AND \"providers\".\"reviewed_at\" IS NOT NULL)"
+        },
+        "ck_providers_identification_both_or_neither": {
+          "name": "ck_providers_identification_both_or_neither",
+          "value": "(\"providers\".\"identification_type\" IS NULL) = (\"providers\".\"identification_number\" IS NULL)"
+        },
+        "ck_providers_identification_format": {
+          "name": "ck_providers_identification_format",
+          "value": "(\"providers\".\"identification_type\" IS DISTINCT FROM 'FISICA'    OR \"providers\".\"identification_number\" ~ '^[0-9]{9}$')\n        AND (\"providers\".\"identification_type\" IS DISTINCT FROM 'JURIDICA'  OR \"providers\".\"identification_number\" ~ '^[0-9]{10}$')\n        AND (\"providers\".\"identification_type\" IS DISTINCT FROM 'DIMEX'     OR \"providers\".\"identification_number\" ~ '^[0-9]{11,12}$')\n        AND (\"providers\".\"identification_type\" IS DISTINCT FROM 'NITE'      OR \"providers\".\"identification_number\" ~ '^[0-9]{9,10}$')\n        AND (\"providers\".\"identification_type\" IS DISTINCT FROM 'PASAPORTE' OR length(\"providers\".\"identification_number\") BETWEEN 3 AND 20)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.exchange_rates": {
+      "name": "exchange_rates",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "base_currency": {
+          "name": "base_currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'USD'"
+        },
+        "quote_currency": {
+          "name": "quote_currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'CRC'"
+        },
+        "rate_date": {
+          "name": "rate_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source": {
+          "name": "source",
+          "type": "exchange_rate_source",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "buy_rate": {
+          "name": "buy_rate",
+          "type": "numeric(14, 6)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sell_rate": {
+          "name": "sell_rate",
+          "type": "numeric(14, 6)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fetched_at": {
+          "name": "fetched_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_by_user_id": {
+          "name": "created_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "supersedes_id": {
+          "name": "supersedes_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "uq_exchange_rates_root_per_date": {
+          "name": "uq_exchange_rates_root_per_date",
+          "columns": [
+            {
+              "expression": "rate_date",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "where": "\"exchange_rates\".\"supersedes_id\" IS NULL",
+          "concurrently": false
+        },
+        "ix_exchange_rates_created_by": {
+          "name": "ix_exchange_rates_created_by",
+          "columns": [
+            {
+              "expression": "created_by_user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "where": "\"exchange_rates\".\"created_by_user_id\" IS NOT NULL",
+          "concurrently": false
+        },
+        "ix_exchange_rates_date_created": {
+          "name": "ix_exchange_rates_date_created",
+          "columns": [
+            {
+              "expression": "rate_date",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "fk_exchange_rates_created_by_user_id": {
+          "name": "fk_exchange_rates_created_by_user_id",
+          "tableFrom": "exchange_rates",
+          "columnsFrom": [
+            "created_by_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_exchange_rates_supersedes_id_rate_date": {
+          "name": "fk_exchange_rates_supersedes_id_rate_date",
+          "tableFrom": "exchange_rates",
+          "columnsFrom": [
+            "supersedes_id",
+            "rate_date"
+          ],
+          "tableTo": "exchange_rates",
+          "columnsTo": [
+            "id",
+            "rate_date"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "uq_exchange_rates_id_rate_date": {
+          "name": "uq_exchange_rates_id_rate_date",
+          "columns": [
+            "id",
+            "rate_date"
+          ],
+          "nullsNotDistinct": false
+        },
+        "uq_exchange_rates_supersedes_id": {
+          "name": "uq_exchange_rates_supersedes_id",
+          "columns": [
+            "supersedes_id"
+          ],
+          "nullsNotDistinct": false
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "ck_exchange_rates_pair_v1": {
+          "name": "ck_exchange_rates_pair_v1",
+          "value": "\"exchange_rates\".\"base_currency\" = 'USD' AND \"exchange_rates\".\"quote_currency\" = 'CRC'"
+        },
+        "ck_exchange_rates_positive": {
+          "name": "ck_exchange_rates_positive",
+          "value": "\"exchange_rates\".\"buy_rate\" > 0 AND \"exchange_rates\".\"sell_rate\" > 0"
+        },
+        "ck_exchange_rates_sell_gte_buy": {
+          "name": "ck_exchange_rates_sell_gte_buy",
+          "value": "\"exchange_rates\".\"sell_rate\" >= \"exchange_rates\".\"buy_rate\""
+        },
+        "ck_exchange_rates_manual_creator": {
+          "name": "ck_exchange_rates_manual_creator",
+          "value": "(\"exchange_rates\".\"source\" = 'MANUAL' AND \"exchange_rates\".\"created_by_user_id\" IS NOT NULL) OR (\"exchange_rates\".\"source\" = 'BCCR' AND \"exchange_rates\".\"created_by_user_id\" IS NULL)"
+        },
+        "ck_exchange_rates_rates_not_nan": {
+          "name": "ck_exchange_rates_rates_not_nan",
+          "value": "\"exchange_rates\".\"buy_rate\" <> 'NaN' AND \"exchange_rates\".\"sell_rate\" <> 'NaN'"
+        },
+        "ck_exchange_rates_supersedes_manual": {
+          "name": "ck_exchange_rates_supersedes_manual",
+          "value": "\"exchange_rates\".\"supersedes_id\" IS NULL OR \"exchange_rates\".\"source\" = 'MANUAL'"
+        },
+        "ck_exchange_rates_supersedes_not_self": {
+          "name": "ck_exchange_rates_supersedes_not_self",
+          "value": "\"exchange_rates\".\"supersedes_id\" IS NULL OR \"exchange_rates\".\"supersedes_id\" <> \"exchange_rates\".\"id\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.quotation_folio_counters": {
+      "name": "quotation_folio_counters",
+      "schema": "",
+      "columns": {
+        "folio_year": {
+          "name": "folio_year",
+          "type": "smallint",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "last_number": {
+          "name": "last_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "ck_quotation_folio_counters_non_negative": {
+          "name": "ck_quotation_folio_counters_non_negative",
+          "value": "\"quotation_folio_counters\".\"last_number\" >= 0"
+        },
+        "ck_quotation_folio_counters_year_range": {
+          "name": "ck_quotation_folio_counters_year_range",
+          "value": "\"quotation_folio_counters\".\"folio_year\" BETWEEN 2000 AND 9999"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.quotation_items": {
+      "name": "quotation_items",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "quotation_id": {
+          "name": "quotation_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "revision_id": {
+          "name": "revision_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "line_number": {
+          "name": "line_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "catalog_item_id": {
+          "name": "catalog_item_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "provider_id": {
+          "name": "provider_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "item_name": {
+          "name": "item_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "item_description": {
+          "name": "item_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "unit": {
+          "name": "unit",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "provider_name_snapshot": {
+          "name": "provider_name_snapshot",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "quantity": {
+          "name": "quantity",
+          "type": "numeric(18, 6)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unit_cost": {
+          "name": "unit_cost",
+          "type": "numeric(20, 6)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cost_currency": {
+          "name": "cost_currency",
+          "type": "currency_code",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "margin_percent": {
+          "name": "margin_percent",
+          "type": "numeric(9, 6)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unit_price": {
+          "name": "unit_price",
+          "type": "numeric(20, 6)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subtotal": {
+          "name": "subtotal",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true,
+          "generated": {
+            "type": "stored",
+            "as": "quantity * unit_price"
+          }
+        },
+        "tax_percent": {
+          "name": "tax_percent",
+          "type": "numeric(9, 6)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'13'"
+        },
+        "tax_amount": {
+          "name": "tax_amount",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true,
+          "generated": {
+            "type": "stored",
+            "as": "quantity * unit_price * tax_percent / 100"
+          }
+        },
+        "total": {
+          "name": "total",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true,
+          "generated": {
+            "type": "stored",
+            "as": "quantity * unit_price + quantity * unit_price * tax_percent / 100"
+          }
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "ix_quotation_items_quotation_revision": {
+          "name": "ix_quotation_items_quotation_revision",
+          "columns": [
+            {
+              "expression": "quotation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "revision_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ix_quotation_items_catalog_item_id": {
+          "name": "ix_quotation_items_catalog_item_id",
+          "columns": [
+            {
+              "expression": "catalog_item_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "where": "\"quotation_items\".\"catalog_item_id\" IS NOT NULL",
+          "concurrently": false
+        },
+        "ix_quotation_items_provider_id": {
+          "name": "ix_quotation_items_provider_id",
+          "columns": [
+            {
+              "expression": "provider_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "where": "\"quotation_items\".\"provider_id\" IS NOT NULL",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "fk_quotation_items_quotation_id_revision_id": {
+          "name": "fk_quotation_items_quotation_id_revision_id",
+          "tableFrom": "quotation_items",
+          "columnsFrom": [
+            "quotation_id",
+            "revision_id"
+          ],
+          "tableTo": "quotation_revisions",
+          "columnsTo": [
+            "quotation_id",
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_quotation_items_catalog_item_id": {
+          "name": "fk_quotation_items_catalog_item_id",
+          "tableFrom": "quotation_items",
+          "columnsFrom": [
+            "catalog_item_id"
+          ],
+          "tableTo": "catalog_items",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_quotation_items_provider_id": {
+          "name": "fk_quotation_items_provider_id",
+          "tableFrom": "quotation_items",
+          "columnsFrom": [
+            "provider_id"
+          ],
+          "tableTo": "providers",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "uq_quotation_items_revision_line": {
+          "name": "uq_quotation_items_revision_line",
+          "columns": [
+            "revision_id",
+            "line_number"
+          ],
+          "nullsNotDistinct": false
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "ck_quotation_items_line_number_positive": {
+          "name": "ck_quotation_items_line_number_positive",
+          "value": "\"quotation_items\".\"line_number\" > 0"
+        },
+        "ck_quotation_items_quantity_positive": {
+          "name": "ck_quotation_items_quantity_positive",
+          "value": "\"quotation_items\".\"quantity\" > 0 AND \"quotation_items\".\"quantity\" <> 'NaN'"
+        },
+        "ck_quotation_items_unit_cost_non_negative": {
+          "name": "ck_quotation_items_unit_cost_non_negative",
+          "value": "\"quotation_items\".\"unit_cost\" >= 0 AND \"quotation_items\".\"unit_cost\" <> 'NaN'"
+        },
+        "ck_quotation_items_margin_range": {
+          "name": "ck_quotation_items_margin_range",
+          "value": "\"quotation_items\".\"margin_percent\" > 0 AND \"quotation_items\".\"margin_percent\" <= 100 AND \"quotation_items\".\"margin_percent\" <> 'NaN'"
+        },
+        "ck_quotation_items_unit_price_non_negative": {
+          "name": "ck_quotation_items_unit_price_non_negative",
+          "value": "\"quotation_items\".\"unit_price\" >= 0 AND \"quotation_items\".\"unit_price\" <> 'NaN'"
+        },
+        "ck_quotation_items_tax_percent_v1": {
+          "name": "ck_quotation_items_tax_percent_v1",
+          "value": "\"quotation_items\".\"tax_percent\" = 13 AND \"quotation_items\".\"tax_percent\" <> 'NaN'"
+        },
+        "ck_quotation_items_provider_snapshot": {
+          "name": "ck_quotation_items_provider_snapshot",
+          "value": "\"quotation_items\".\"provider_id\" IS NULL OR \"quotation_items\".\"provider_name_snapshot\" IS NOT NULL"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.quotation_reviews": {
+      "name": "quotation_reviews",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "quotation_id": {
+          "name": "quotation_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "revision_id": {
+          "name": "revision_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "revision_version": {
+          "name": "revision_version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reviewer_user_id": {
+          "name": "reviewer_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "outcome": {
+          "name": "outcome",
+          "type": "quotation_review_outcome",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "comment": {
+          "name": "comment",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reviewed_at": {
+          "name": "reviewed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "ix_quotation_reviews_quotation_reviewed": {
+          "name": "ix_quotation_reviews_quotation_reviewed",
+          "columns": [
+            {
+              "expression": "quotation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "reviewed_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ix_quotation_reviews_reviewer_reviewed": {
+          "name": "ix_quotation_reviews_reviewer_reviewed",
+          "columns": [
+            {
+              "expression": "reviewer_user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "reviewed_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "fk_quotation_reviews_quotation_id_revision_id": {
+          "name": "fk_quotation_reviews_quotation_id_revision_id",
+          "tableFrom": "quotation_reviews",
+          "columnsFrom": [
+            "quotation_id",
+            "revision_id"
+          ],
+          "tableTo": "quotation_revisions",
+          "columnsTo": [
+            "quotation_id",
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_quotation_reviews_reviewer_user_id": {
+          "name": "fk_quotation_reviews_reviewer_user_id",
+          "tableFrom": "quotation_reviews",
+          "columnsFrom": [
+            "reviewer_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.quotation_revisions": {
+      "name": "quotation_revisions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "quotation_id": {
+          "name": "quotation_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "customer_id": {
+          "name": "customer_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "revision_number": {
+          "name": "revision_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "state": {
+          "name": "state",
+          "type": "quotation_revision_state",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'DRAFT'"
+        },
+        "currency": {
+          "name": "currency",
+          "type": "currency_code",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "exchange_rate_id": {
+          "name": "exchange_rate_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fx_buy": {
+          "name": "fx_buy",
+          "type": "numeric(14, 6)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fx_sell": {
+          "name": "fx_sell",
+          "type": "numeric(14, 6)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fx_rate_date": {
+          "name": "fx_rate_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fx_source": {
+          "name": "fx_source",
+          "type": "exchange_rate_source",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fx_applied_rate": {
+          "name": "fx_applied_rate",
+          "type": "numeric(14, 6)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "customer_name": {
+          "name": "customer_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "customer_identification": {
+          "name": "customer_identification",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "customer_email": {
+          "name": "customer_email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "customer_phone": {
+          "name": "customer_phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "customer_address": {
+          "name": "customer_address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "customer_contact_name": {
+          "name": "customer_contact_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "customer_contact_phone": {
+          "name": "customer_contact_phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "customer_contact_email": {
+          "name": "customer_contact_email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "customer_contact_department": {
+          "name": "customer_contact_department",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "customer_contact_extension": {
+          "name": "customer_contact_extension",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "seller_user_id": {
+          "name": "seller_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "seller_name": {
+          "name": "seller_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "seller_email": {
+          "name": "seller_email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "seller_phone": {
+          "name": "seller_phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_by_user_id": {
+          "name": "created_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "issued_by_user_id": {
+          "name": "issued_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "subtotal": {
+          "name": "subtotal",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tax_total": {
+          "name": "tax_total",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "total": {
+          "name": "total",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "issued_at": {
+          "name": "issued_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "uq_quotation_revisions_one_draft": {
+          "name": "uq_quotation_revisions_one_draft",
+          "columns": [
+            {
+              "expression": "quotation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "where": "\"quotation_revisions\".\"state\" = 'DRAFT'",
+          "concurrently": false
+        },
+        "ix_quotation_revisions_exchange_rate_id": {
+          "name": "ix_quotation_revisions_exchange_rate_id",
+          "columns": [
+            {
+              "expression": "exchange_rate_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "where": "\"quotation_revisions\".\"exchange_rate_id\" IS NOT NULL",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "fk_quotation_revisions_quotation_id": {
+          "name": "fk_quotation_revisions_quotation_id",
+          "tableFrom": "quotation_revisions",
+          "columnsFrom": [
+            "quotation_id"
+          ],
+          "tableTo": "quotations",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_quotation_revisions_customer_id": {
+          "name": "fk_quotation_revisions_customer_id",
+          "tableFrom": "quotation_revisions",
+          "columnsFrom": [
+            "customer_id"
+          ],
+          "tableTo": "customers",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_quotation_revisions_seller_user_id": {
+          "name": "fk_quotation_revisions_seller_user_id",
+          "tableFrom": "quotation_revisions",
+          "columnsFrom": [
+            "seller_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_quotation_revisions_created_by_user_id": {
+          "name": "fk_quotation_revisions_created_by_user_id",
+          "tableFrom": "quotation_revisions",
+          "columnsFrom": [
+            "created_by_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_quotation_revisions_issued_by_user_id": {
+          "name": "fk_quotation_revisions_issued_by_user_id",
+          "tableFrom": "quotation_revisions",
+          "columnsFrom": [
+            "issued_by_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_quotation_revisions_exchange_rate_id": {
+          "name": "fk_quotation_revisions_exchange_rate_id",
+          "tableFrom": "quotation_revisions",
+          "columnsFrom": [
+            "exchange_rate_id"
+          ],
+          "tableTo": "exchange_rates",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "uq_quotation_revisions_quotation_id_id": {
+          "name": "uq_quotation_revisions_quotation_id_id",
+          "columns": [
+            "quotation_id",
+            "id"
+          ],
+          "nullsNotDistinct": false
+        },
+        "uq_quotation_revisions_number": {
+          "name": "uq_quotation_revisions_number",
+          "columns": [
+            "quotation_id",
+            "revision_number"
+          ],
+          "nullsNotDistinct": false
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "ck_quotation_revisions_number_positive": {
+          "name": "ck_quotation_revisions_number_positive",
+          "value": "\"quotation_revisions\".\"revision_number\" > 0"
+        },
+        "ck_quotation_revisions_issued_coherence": {
+          "name": "ck_quotation_revisions_issued_coherence",
+          "value": "(\"quotation_revisions\".\"state\" = 'DRAFT' AND \"quotation_revisions\".\"issued_at\" IS NULL AND \"quotation_revisions\".\"issued_by_user_id\" IS NULL)\n        OR (\"quotation_revisions\".\"state\" = 'ISSUED' AND \"quotation_revisions\".\"issued_at\" IS NOT NULL AND \"quotation_revisions\".\"issued_by_user_id\" IS NOT NULL)"
+        },
+        "ck_quotation_revisions_fx_coherence": {
+          "name": "ck_quotation_revisions_fx_coherence",
+          "value": "(\"quotation_revisions\".\"fx_buy\" IS NULL AND \"quotation_revisions\".\"fx_sell\" IS NULL AND \"quotation_revisions\".\"fx_rate_date\" IS NULL AND \"quotation_revisions\".\"fx_source\" IS NULL AND \"quotation_revisions\".\"exchange_rate_id\" IS NULL)\n        OR (\"quotation_revisions\".\"fx_buy\" IS NOT NULL AND \"quotation_revisions\".\"fx_sell\" IS NOT NULL AND \"quotation_revisions\".\"fx_rate_date\" IS NOT NULL AND \"quotation_revisions\".\"fx_source\" IS NOT NULL AND \"quotation_revisions\".\"exchange_rate_id\" IS NOT NULL)"
+        },
+        "ck_quotation_revisions_fx_applied_rate_requires_exchange_rate": {
+          "name": "ck_quotation_revisions_fx_applied_rate_requires_exchange_rate",
+          "value": "\"quotation_revisions\".\"fx_applied_rate\" IS NULL OR \"quotation_revisions\".\"exchange_rate_id\" IS NOT NULL"
+        },
+        "ck_quotation_revisions_fx_values_positive": {
+          "name": "ck_quotation_revisions_fx_values_positive",
+          "value": "(\"quotation_revisions\".\"fx_buy\" IS NULL OR (\"quotation_revisions\".\"fx_buy\" > 0 AND \"quotation_revisions\".\"fx_buy\" <> 'NaN'))\n        AND (\"quotation_revisions\".\"fx_sell\" IS NULL OR (\"quotation_revisions\".\"fx_sell\" > 0 AND \"quotation_revisions\".\"fx_sell\" <> 'NaN'))\n        AND (\"quotation_revisions\".\"fx_applied_rate\" IS NULL OR (\"quotation_revisions\".\"fx_applied_rate\" > 0 AND \"quotation_revisions\".\"fx_applied_rate\" <> 'NaN'))"
+        },
+        "ck_quotation_revisions_totals_coherence": {
+          "name": "ck_quotation_revisions_totals_coherence",
+          "value": "(\"quotation_revisions\".\"state\" = 'DRAFT' AND \"quotation_revisions\".\"subtotal\" IS NULL AND \"quotation_revisions\".\"tax_total\" IS NULL AND \"quotation_revisions\".\"total\" IS NULL)\n        OR (\"quotation_revisions\".\"state\" = 'ISSUED' AND \"quotation_revisions\".\"subtotal\" IS NOT NULL AND \"quotation_revisions\".\"tax_total\" IS NOT NULL AND \"quotation_revisions\".\"total\" IS NOT NULL)"
+        },
+        "ck_quotation_revisions_totals_non_negative_finite": {
+          "name": "ck_quotation_revisions_totals_non_negative_finite",
+          "value": "(\"quotation_revisions\".\"subtotal\" IS NULL OR (\"quotation_revisions\".\"subtotal\" >= 0 AND \"quotation_revisions\".\"subtotal\" NOT IN ('NaN','Infinity','-Infinity')))\n        AND (\"quotation_revisions\".\"tax_total\" IS NULL OR (\"quotation_revisions\".\"tax_total\" >= 0 AND \"quotation_revisions\".\"tax_total\" NOT IN ('NaN','Infinity','-Infinity')))\n        AND (\"quotation_revisions\".\"total\" IS NULL OR (\"quotation_revisions\".\"total\" >= 0 AND \"quotation_revisions\".\"total\" NOT IN ('NaN','Infinity','-Infinity')))"
+        },
+        "ck_quotation_revisions_total_equals_sum": {
+          "name": "ck_quotation_revisions_total_equals_sum",
+          "value": "\"quotation_revisions\".\"total\" = \"quotation_revisions\".\"subtotal\" + \"quotation_revisions\".\"tax_total\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.quotation_status_history": {
+      "name": "quotation_status_history",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "seq": {
+          "name": "seq",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "identity": {
+            "name": "quotation_status_history_seq_seq",
+            "increment": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "startWith": "1",
+            "cache": "1",
+            "cycle": false,
+            "schema": "public",
+            "type": "always"
+          }
+        },
+        "quotation_id": {
+          "name": "quotation_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "revision_id": {
+          "name": "revision_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "from_status": {
+          "name": "from_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "to_status": {
+          "name": "to_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "changed_by_user_id": {
+          "name": "changed_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "changed_at": {
+          "name": "changed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "ix_quotation_status_history_quotation_changed": {
+          "name": "ix_quotation_status_history_quotation_changed",
+          "columns": [
+            {
+              "expression": "quotation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "changed_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ix_quotation_status_history_to_changed": {
+          "name": "ix_quotation_status_history_to_changed",
+          "columns": [
+            {
+              "expression": "to_status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "changed_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "fk_quotation_status_history_quotation_id": {
+          "name": "fk_quotation_status_history_quotation_id",
+          "tableFrom": "quotation_status_history",
+          "columnsFrom": [
+            "quotation_id"
+          ],
+          "tableTo": "quotations",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_quotation_status_history_quotation_id_revision_id": {
+          "name": "fk_quotation_status_history_quotation_id_revision_id",
+          "tableFrom": "quotation_status_history",
+          "columnsFrom": [
+            "quotation_id",
+            "revision_id"
+          ],
+          "tableTo": "quotation_revisions",
+          "columnsTo": [
+            "quotation_id",
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_quotation_status_history_changed_by_user_id": {
+          "name": "fk_quotation_status_history_changed_by_user_id",
+          "tableFrom": "quotation_status_history",
+          "columnsFrom": [
+            "changed_by_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "uq_quotation_status_history_seq": {
+          "name": "uq_quotation_status_history_seq",
+          "columns": [
+            "seq"
+          ],
+          "nullsNotDistinct": false
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "ck_quotation_status_history_to_values": {
+          "name": "ck_quotation_status_history_to_values",
+          "value": "\"quotation_status_history\".\"to_status\" IN ('DRAFT','ISSUED','SENT','WON','LOST','CANCELLED')"
+        },
+        "ck_quotation_status_history_from_values": {
+          "name": "ck_quotation_status_history_from_values",
+          "value": "\"quotation_status_history\".\"from_status\" IS NULL OR \"quotation_status_history\".\"from_status\" IN ('DRAFT','ISSUED','SENT','WON','LOST','CANCELLED')"
+        },
+        "ck_quotation_status_history_revision_required": {
+          "name": "ck_quotation_status_history_revision_required",
+          "value": "\"quotation_status_history\".\"to_status\" NOT IN ('ISSUED','SENT','WON') OR \"quotation_status_history\".\"revision_id\" IS NOT NULL"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.quotations": {
+      "name": "quotations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "customer_id": {
+          "name": "customer_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_by_user_id": {
+          "name": "created_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "owner_user_id": {
+          "name": "owner_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'DRAFT'"
+        },
+        "folio_year": {
+          "name": "folio_year",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "folio_number": {
+          "name": "folio_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "folio": {
+          "name": "folio",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "generated": {
+            "type": "stored",
+            "as": "CASE\n      WHEN folio_year IS NULL THEN NULL\n      ELSE 'COT-' || folio_year::text || '-' ||\n           lpad(folio_number::text, GREATEST(3, length(folio_number::text)), '0')\n      END"
+          }
+        },
+        "sold_revision_id": {
+          "name": "sold_revision_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "ix_quotations_customer_id": {
+          "name": "ix_quotations_customer_id",
+          "columns": [
+            {
+              "expression": "customer_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ix_quotations_owner_status": {
+          "name": "ix_quotations_owner_status",
+          "columns": [
+            {
+              "expression": "owner_user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ix_quotations_status_updated": {
+          "name": "ix_quotations_status_updated",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "fk_quotations_customer_id": {
+          "name": "fk_quotations_customer_id",
+          "tableFrom": "quotations",
+          "columnsFrom": [
+            "customer_id"
+          ],
+          "tableTo": "customers",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_quotations_created_by_user_id": {
+          "name": "fk_quotations_created_by_user_id",
+          "tableFrom": "quotations",
+          "columnsFrom": [
+            "created_by_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_quotations_owner_user_id": {
+          "name": "fk_quotations_owner_user_id",
+          "tableFrom": "quotations",
+          "columnsFrom": [
+            "owner_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_quotations_id_sold_revision_id": {
+          "name": "fk_quotations_id_sold_revision_id",
+          "tableFrom": "quotations",
+          "columnsFrom": [
+            "id",
+            "sold_revision_id"
+          ],
+          "tableTo": "quotation_revisions",
+          "columnsTo": [
+            "quotation_id",
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "uq_quotations_folio": {
+          "name": "uq_quotations_folio",
+          "columns": [
+            "folio_year",
+            "folio_number"
+          ],
+          "nullsNotDistinct": false
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "ck_quotations_folio_coherence": {
+          "name": "ck_quotations_folio_coherence",
+          "value": "((\"quotations\".\"folio_year\" IS NULL AND \"quotations\".\"folio_number\" IS NULL) OR (\"quotations\".\"folio_year\" IS NOT NULL AND \"quotations\".\"folio_number\" IS NOT NULL))\n        AND (\"quotations\".\"status\" <> 'DRAFT' OR \"quotations\".\"folio_year\" IS NULL)\n        AND (\"quotations\".\"status\" NOT IN ('ISSUED','SENT','WON','LOST') OR \"quotations\".\"folio_year\" IS NOT NULL)"
+        },
+        "ck_quotations_folio_values": {
+          "name": "ck_quotations_folio_values",
+          "value": "\"quotations\".\"folio_year\" IS NULL OR (\"quotations\".\"folio_year\" BETWEEN 2000 AND 9999 AND \"quotations\".\"folio_number\" > 0)"
+        },
+        "ck_quotations_sold_coherence": {
+          "name": "ck_quotations_sold_coherence",
+          "value": "(\"quotations\".\"status\" = 'WON' AND \"quotations\".\"sold_revision_id\" IS NOT NULL) OR (\"quotations\".\"status\" <> 'WON' AND \"quotations\".\"sold_revision_id\" IS NULL)"
+        },
+        "ck_quotations_status_values": {
+          "name": "ck_quotations_status_values",
+          "value": "\"quotations\".\"status\" IN ('DRAFT','ISSUED','SENT','WON','LOST','CANCELLED')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.audit_logs": {
+      "name": "audit_logs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "occurred_at": {
+          "name": "occurred_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "actor_type": {
+          "name": "actor_type",
+          "type": "audit_actor_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "actor_user_id": {
+          "name": "actor_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attempted_identifier_hmac": {
+          "name": "attempted_identifier_hmac",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "target_type": {
+          "name": "target_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "target_id": {
+          "name": "target_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "target_user_id": {
+          "name": "target_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "action": {
+          "name": "action",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "result": {
+          "name": "result",
+          "type": "audit_result",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ip_address": {
+          "name": "ip_address",
+          "type": "inet",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_agent": {
+          "name": "user_agent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "request_id": {
+          "name": "request_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "auth_session_id": {
+          "name": "auth_session_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "metadata": {
+          "name": "metadata",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "ix_audit_logs_occurred_at": {
+          "name": "ix_audit_logs_occurred_at",
+          "columns": [
+            {
+              "expression": "occurred_at",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ix_audit_logs_actor_user_id": {
+          "name": "ix_audit_logs_actor_user_id",
+          "columns": [
+            {
+              "expression": "actor_user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "where": "\"audit_logs\".\"actor_user_id\" IS NOT NULL",
+          "concurrently": false
+        },
+        "ix_audit_logs_target": {
+          "name": "ix_audit_logs_target",
+          "columns": [
+            {
+              "expression": "target_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "target_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "where": "\"audit_logs\".\"target_type\" IS NOT NULL",
+          "concurrently": false
+        },
+        "ix_audit_logs_target_user_id": {
+          "name": "ix_audit_logs_target_user_id",
+          "columns": [
+            {
+              "expression": "target_user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "where": "\"audit_logs\".\"target_user_id\" IS NOT NULL",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "fk_audit_logs_actor_user_id": {
+          "name": "fk_audit_logs_actor_user_id",
+          "tableFrom": "audit_logs",
+          "columnsFrom": [
+            "actor_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_audit_logs_target_user_id": {
+          "name": "fk_audit_logs_target_user_id",
+          "tableFrom": "audit_logs",
+          "columnsFrom": [
+            "target_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "ck_audit_logs_actor_coherence": {
+          "name": "ck_audit_logs_actor_coherence",
+          "value": "(\"audit_logs\".\"actor_type\" = 'USER' AND \"audit_logs\".\"actor_user_id\" IS NOT NULL) OR (\"audit_logs\".\"actor_type\" <> 'USER' AND \"audit_logs\".\"actor_user_id\" IS NULL)"
+        },
+        "ck_audit_logs_target_both_or_neither": {
+          "name": "ck_audit_logs_target_both_or_neither",
+          "value": "(\"audit_logs\".\"target_type\" IS NULL) = (\"audit_logs\".\"target_id\" IS NULL)"
+        },
+        "ck_audit_logs_target_user_coherence": {
+          "name": "ck_audit_logs_target_user_coherence",
+          "value": "((\"audit_logs\".\"target_type\" IS NOT DISTINCT FROM 'user' AND \"audit_logs\".\"target_user_id\" IS NOT NULL AND \"audit_logs\".\"target_user_id\" = \"audit_logs\".\"target_id\") OR (\"audit_logs\".\"target_type\" IS DISTINCT FROM 'user' AND \"audit_logs\".\"target_user_id\" IS NULL)) IS TRUE"
+        },
+        "ck_audit_logs_target_type_format": {
+          "name": "ck_audit_logs_target_type_format",
+          "value": "\"audit_logs\".\"target_type\" IS NULL OR \"audit_logs\".\"target_type\" ~ '^[a-z][a-z_]*$'"
+        },
+        "ck_audit_logs_action_format": {
+          "name": "ck_audit_logs_action_format",
+          "value": "\"audit_logs\".\"action\" ~ '^[A-Z][A-Z0-9_]*([.][A-Z][A-Z0-9_]*)*$'"
+        },
+        "ck_audit_logs_attempted_identifier_hmac": {
+          "name": "ck_audit_logs_attempted_identifier_hmac",
+          "value": "\"audit_logs\".\"attempted_identifier_hmac\" IS NULL OR (\"audit_logs\".\"attempted_identifier_hmac\" ~ '^[0-9a-f]{64}$' AND \"audit_logs\".\"actor_type\" = 'ANONYMOUS' AND \"audit_logs\".\"result\" = 'FAILURE' AND \"audit_logs\".\"action\" = 'AUTH.LOGIN_FAILURE')"
+        },
+        "ck_audit_logs_metadata_object": {
+          "name": "ck_audit_logs_metadata_object",
+          "value": "\"audit_logs\".\"metadata\" IS NULL OR jsonb_typeof(\"audit_logs\".\"metadata\") = 'object'"
+        },
+        "ck_audit_logs_metadata_size": {
+          "name": "ck_audit_logs_metadata_size",
+          "value": "\"audit_logs\".\"metadata\" IS NULL OR pg_column_size(\"audit_logs\".\"metadata\") <= 8192"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.generated_documents": {
+      "name": "generated_documents",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "quotation_id": {
+          "name": "quotation_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "revision_id": {
+          "name": "revision_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kind": {
+          "name": "kind",
+          "type": "generated_document_kind",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'QUOTATION_PDF'"
+        },
+        "storage_provider": {
+          "name": "storage_provider",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "storage_bucket": {
+          "name": "storage_bucket",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "storage_key": {
+          "name": "storage_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "file_name": {
+          "name": "file_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mime_type": {
+          "name": "mime_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'application/pdf'"
+        },
+        "byte_size": {
+          "name": "byte_size",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sha256": {
+          "name": "sha256",
+          "type": "char(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_by_user_id": {
+          "name": "created_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "uq_generated_documents_storage": {
+          "name": "uq_generated_documents_storage",
+          "columns": [
+            {
+              "expression": "storage_provider",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "coalesce(\"storage_bucket\", '')",
+              "isExpression": true,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "storage_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ix_generated_documents_quotation_revision": {
+          "name": "ix_generated_documents_quotation_revision",
+          "columns": [
+            {
+              "expression": "quotation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "revision_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "fk_generated_documents_quotation_id_revision_id": {
+          "name": "fk_generated_documents_quotation_id_revision_id",
+          "tableFrom": "generated_documents",
+          "columnsFrom": [
+            "quotation_id",
+            "revision_id"
+          ],
+          "tableTo": "quotation_revisions",
+          "columnsTo": [
+            "quotation_id",
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        },
+        "fk_generated_documents_created_by_user_id": {
+          "name": "fk_generated_documents_created_by_user_id",
+          "tableFrom": "generated_documents",
+          "columnsFrom": [
+            "created_by_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "uq_generated_documents_sha_revision": {
+          "name": "uq_generated_documents_sha_revision",
+          "columns": [
+            "revision_id",
+            "kind",
+            "sha256"
+          ],
+          "nullsNotDistinct": false
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "ck_generated_documents_storage_provider": {
+          "name": "ck_generated_documents_storage_provider",
+          "value": "\"generated_documents\".\"storage_provider\" IN ('R2', 'LOCAL_FS')"
+        },
+        "ck_generated_documents_byte_size_positive": {
+          "name": "ck_generated_documents_byte_size_positive",
+          "value": "\"generated_documents\".\"byte_size\" > 0"
+        },
+        "ck_generated_documents_sha256_format": {
+          "name": "ck_generated_documents_sha256_format",
+          "value": "\"generated_documents\".\"sha256\" ~ '^[0-9a-f]{64}$'"
+        },
+        "ck_generated_documents_mime_type_pdf": {
+          "name": "ck_generated_documents_mime_type_pdf",
+          "value": "\"generated_documents\".\"kind\" <> 'QUOTATION_PDF' OR \"generated_documents\".\"mime_type\" = 'application/pdf'"
+        },
+        "ck_generated_documents_storage_key_format": {
+          "name": "ck_generated_documents_storage_key_format",
+          "value": "length(\"generated_documents\".\"storage_key\") BETWEEN 1 AND 1024 AND \"generated_documents\".\"storage_key\" !~ '^/'"
+        },
+        "ck_generated_documents_file_name_length": {
+          "name": "ck_generated_documents_file_name_length",
+          "value": "length(\"generated_documents\".\"file_name\") BETWEEN 1 AND 255"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.system_settings": {
+      "name": "system_settings",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "boolean",
+          "primaryKey": true,
+          "notNull": true,
+          "default": true
+        },
+        "margin_warning_percent": {
+          "name": "margin_warning_percent",
+          "type": "numeric(9, 6)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'25'"
+        },
+        "updated_by_user_id": {
+          "name": "updated_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "fk_system_settings_updated_by_user_id": {
+          "name": "fk_system_settings_updated_by_user_id",
+          "tableFrom": "system_settings",
+          "columnsFrom": [
+            "updated_by_user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "restrict",
+          "onDelete": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "ck_system_settings_singleton": {
+          "name": "ck_system_settings_singleton",
+          "value": "\"system_settings\".\"id\""
+        },
+        "ck_system_settings_margin_range": {
+          "name": "ck_system_settings_margin_range",
+          "value": "\"system_settings\".\"margin_warning_percent\" > 0 AND \"system_settings\".\"margin_warning_percent\" <= 100 AND \"system_settings\".\"margin_warning_percent\" <> 'NaN'"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.role_code": {
+      "name": "role_code",
+      "schema": "public",
+      "values": [
+        "ADMIN",
+        "SELLER",
+        "COMMERCIAL_MANAGER",
+        "ADMINISTRATIVE_MANAGER"
+      ]
+    },
+    "public.user_status": {
+      "name": "user_status",
+      "schema": "public",
+      "values": [
+        "PENDING_ACTIVATION",
+        "ACTIVE",
+        "INACTIVE"
+      ]
+    },
+    "public.catalog_review_status": {
+      "name": "catalog_review_status",
+      "schema": "public",
+      "values": [
+        "PENDING_REVIEW",
+        "APPROVED",
+        "REJECTED",
+        "MERGED"
+      ]
+    },
+    "public.customer_status": {
+      "name": "customer_status",
+      "schema": "public",
+      "values": [
+        "ACTIVE",
+        "INACTIVE"
+      ]
+    },
+    "public.identification_type": {
+      "name": "identification_type",
+      "schema": "public",
+      "values": [
+        "FISICA",
+        "JURIDICA",
+        "DIMEX",
+        "NITE",
+        "PASAPORTE"
+      ]
+    },
+    "public.currency_code": {
+      "name": "currency_code",
+      "schema": "public",
+      "values": [
+        "CRC",
+        "USD"
+      ]
+    },
+    "public.exchange_rate_source": {
+      "name": "exchange_rate_source",
+      "schema": "public",
+      "values": [
+        "BCCR",
+        "MANUAL"
+      ]
+    },
+    "public.quotation_review_outcome": {
+      "name": "quotation_review_outcome",
+      "schema": "public",
+      "values": [
+        "APPROVED",
+        "REJECTED",
+        "CHANGES_REQUESTED"
+      ]
+    },
+    "public.quotation_revision_state": {
+      "name": "quotation_revision_state",
+      "schema": "public",
+      "values": [
+        "DRAFT",
+        "ISSUED"
+      ]
+    },
+    "public.audit_actor_type": {
+      "name": "audit_actor_type",
+      "schema": "public",
+      "values": [
+        "USER",
+        "SYSTEM",
+        "ANONYMOUS"
+      ]
+    },
+    "public.audit_result": {
+      "name": "audit_result",
+      "schema": "public",
+      "values": [
+        "SUCCESS",
+        "FAILURE",
+        "DENIED"
+      ]
+    },
+    "public.generated_document_kind": {
+      "name": "generated_document_kind",
+      "schema": "public",
+      "values": [
+        "QUOTATION_PDF"
+      ]
+    }
+  },
+  "schemas": {},
+  "views": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

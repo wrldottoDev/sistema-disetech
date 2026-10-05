@@ -1,0 +1,1 @@
+export default function PublicLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <main className="auth-shell"><div className="auth-card"><div className="brand">DISETECH</div>{children}</div></main>; }
